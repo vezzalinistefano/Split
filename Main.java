@@ -2,12 +2,14 @@ import gui.SplitFrame;
 
 import javax.swing.*;
 
+/**
+ * Classe Main del programma
+ */
 public class Main {
     public static void main(String args[]) {
         SplitFrame sf = new SplitFrame();
-        sf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        sf.setSize(500, 500);
+        sf.setBounds(500, 600, 500, 600);
         sf.setVisible(true);
     }
 }

@@ -4,18 +4,32 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Classe contenente il JPanel della toolbar che permette
+ * Classe che implementa il JPanel della toolbar che permette
  * di scegliere quali operazioni eseguire
  */
 public class JobsPanel extends JPanel {
-    public JobsPanel () {
-        super(new BorderLayout());
+    private JToolBar jobsBar;
+    private JButton divideBtn, stitchBtn;
 
-        JToolBar jobsBar = new JToolBar();
+    /**
+     * Metodo costruttore della classe JobsPanel, inizializza i due bottoni all'interno della
+     * JToolbar che permettono all'utente di scegliere cosa fare
+     */
+    public JobsPanel() {
+        super();
+        this.setLayout(new BorderLayout());
+
+        jobsBar = new JToolBar();
         jobsBar.setFloatable(false);
-        this.add(jobsBar, BorderLayout.PAGE_START);
-        jobsBar.add(new JButton("Dividi"));
-        jobsBar.add(new JButton("Ricomponi"));
+
+        divideBtn = new JButton("Dividi");
+        stitchBtn = new JButton("Unisci");
+
+        jobsBar.add(divideBtn);
+        jobsBar.add(stitchBtn);
+
+        this.add(jobsBar);
+
     }
 
 }

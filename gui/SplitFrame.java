@@ -1,7 +1,7 @@
 package gui;
 
 import gui.panels.JobsPanel;
-import gui.panels.SettingsPanel;
+import gui.panels.MidPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,22 +10,23 @@ import java.awt.*;
  * Classe che implementa il frame contenente il programma
  */
 public class SplitFrame extends JFrame {
-    protected final JobsPanel jobsPanel;
-    protected final SettingsPanel settingsPanel;
+    private Container cp;
 
-    public SplitFrame () {
+    private JobsPanel jobsPanel;
+    private MidPanel midPanel;
+
+    public SplitFrame() {
         this.setTitle("Split");
-
-        Container cp = getContentPane();
-
-        // this.add(Box.createVerticalStrut(4));
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         jobsPanel = new JobsPanel();
-        settingsPanel = new SettingsPanel();
 
-        cp.add(jobsPanel);
-        cp.add(settingsPanel);
+        this.add(jobsPanel, BorderLayout.PAGE_START);
 
-        this.setVisible(true);
+        midPanel = new MidPanel();
+
+        this.add(midPanel, BorderLayout.CENTER);
+        this.pack();
+
     }
 }
