@@ -1,7 +1,9 @@
 package gui;
 
+import gui.panels.DivideSettingPanel;
 import gui.panels.JobsPanel;
-import gui.panels.MidPanel;
+import gui.panels.MainPanel;
+import gui.panels.MergeSettingPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,23 +12,36 @@ import java.awt.*;
  * Classe che implementa il frame contenente il programma
  */
 public class SplitFrame extends JFrame {
-    private Container cp;
 
+    private CardLayout cardLayout = new CardLayout();
+    private MainPanel mainPanel;
     private JobsPanel jobsPanel;
-    private MidPanel midPanel;
+    private DivideSettingPanel divideSettingPanel;
+    private MergeSettingPanel mergeSettingPanel;
+
+    public static final String DIVIDE_PANEL = "Divide panel";
+    public static final String MERGE_PANEL = "Merge panel";
 
     public SplitFrame() {
         this.setTitle("Split");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        jobsPanel = new JobsPanel();
+        mainPanel = new MainPanel("Dividi");
+        mainPanel.setLayout(cardLayout);
 
-        this.add(jobsPanel, BorderLayout.PAGE_START);
+        Container cp = getContentPane();
 
-        midPanel = new MidPanel();
+        divideSettingPanel = new DivideSettingPanel();
+        mergeSettingPanel = new MergeSettingPanel();
+        jobsPanel = new JobsPanel(mainPanel, cardLayout);
 
-        this.add(midPanel, BorderLayout.CENTER);
+        cp.add(jobsPanel, BorderLayout.PAGE_START);
+        cp.add(Box.createHorizontalStrut(4));
+
+        mainPanel.add(divideSettingPanel, DIVIDE_PANEL);
+        mainPanel.add(mergeSettingPanel, MERGE_PANEL);
+        cardLayout.show(mainPanel, DIVIDE_PANEL);
+        cp.add(mainPanel);
         this.pack();
-
     }
 }
