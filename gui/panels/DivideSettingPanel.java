@@ -1,5 +1,6 @@
 package gui.panels;
 
+import gui.SplitFrame;
 import gui.rows.*;
 
 import javax.swing.*;
@@ -7,7 +8,6 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 public class DivideSettingPanel extends DivideAndMergePanel {
-    private Border border;
 
     private ChooseFileRow chooseFileRow;
     private PartsSettingsRow partsSettingsRow;
@@ -16,7 +16,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
     private AddDivideJobRow addDivideJobRow;
 
     public DivideSettingPanel() {
-        super("Dividi");
+        super(SplitFrame.DIVIDE_PANEL);
 
         chooseFileRow = new ChooseFileRow();
         partsSettingsRow = new PartsSettingsRow();
@@ -38,10 +38,5 @@ public class DivideSettingPanel extends DivideAndMergePanel {
 
         this.add(Box.createVerticalStrut(8));
         this.add(addDivideJobRow);
-    }
-
-    public String getCurrentJob() {
-        TitledBorder b = (TitledBorder) this.getBorder();
-        return b.getTitle();
     }
 }

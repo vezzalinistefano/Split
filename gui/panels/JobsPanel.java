@@ -15,7 +15,7 @@ public class JobsPanel extends JPanel implements ActionListener {
 
     private MainPanel currentJob;
     private JToolBar jobsBar;
-    private JButton divideBtn, stitchBtn;
+    private JButton divideBtn, mergeBtn;
     private CardLayout cardLayout;
 
     public JobsPanel(MainPanel currentJob, CardLayout cardLayout) {
@@ -27,14 +27,14 @@ public class JobsPanel extends JPanel implements ActionListener {
         jobsBar = new JToolBar();
         jobsBar.setFloatable(false);
 
-        divideBtn = new JButton("Dividi");
-        stitchBtn = new JButton("Unisci");
+        divideBtn = new JButton(SplitFrame.DIVIDE_PANEL);
+        mergeBtn = new JButton(SplitFrame.MERGE_PANEL);
 
         divideBtn.addActionListener(this);
-        stitchBtn.addActionListener(this);
+        mergeBtn.addActionListener(this);
 
         jobsBar.add(divideBtn);
-        jobsBar.add(stitchBtn);
+        jobsBar.add(mergeBtn);
 
         this.add(jobsBar);
 
@@ -42,12 +42,14 @@ public class JobsPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Dividi") && currentJob.getCurrentJob().equals("Unisci")) {
+        if (e.getActionCommand().equals(SplitFrame.DIVIDE_PANEL)
+                && currentJob.getCurrentJob().equals(SplitFrame.MERGE_PANEL)) {
             cardLayout.show(currentJob, SplitFrame.DIVIDE_PANEL);
-            currentJob.setCurrentJob("Dividi");
-        } else if (e.getActionCommand().equals("Unisci") && currentJob.getCurrentJob().equals("Dividi")) {
+            currentJob.setCurrentJob(SplitFrame.DIVIDE_PANEL);
+        } else if (e.getActionCommand().equals(SplitFrame.MERGE_PANEL)
+                && currentJob.getCurrentJob().equals(SplitFrame.DIVIDE_PANEL)) {
             cardLayout.show(currentJob, SplitFrame.MERGE_PANEL);
-            currentJob.setCurrentJob("Unisci");
+            currentJob.setCurrentJob(SplitFrame.MERGE_PANEL);
         }
     }
 }

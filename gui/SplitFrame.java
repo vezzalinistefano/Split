@@ -19,14 +19,14 @@ public class SplitFrame extends JFrame {
     private DivideSettingPanel divideSettingPanel;
     private MergeSettingPanel mergeSettingPanel;
 
-    public static final String DIVIDE_PANEL = "Divide panel";
-    public static final String MERGE_PANEL = "Merge panel";
+    public static final String DIVIDE_PANEL = "Dividi";
+    public static final String MERGE_PANEL = "Unisci";
 
     public SplitFrame() {
         this.setTitle("Split");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        mainPanel = new MainPanel("Dividi");
+        mainPanel = new MainPanel(DIVIDE_PANEL);
         mainPanel.setLayout(cardLayout);
 
         Container cp = getContentPane();
