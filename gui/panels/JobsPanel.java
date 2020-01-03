@@ -13,11 +13,35 @@ import java.awt.event.ActionListener;
  */
 public class JobsPanel extends JPanel implements ActionListener {
 
+    /**
+     * Pannello principale che permette lo switch tra il pannello per
+     * la divisione dei file e quello per l'unione dei file
+     */
     private MainPanel currentJob;
+    /**
+     * Toolbar contenente bottoni per scegliere che operazione fare
+     */
     private JToolBar jobsBar;
-    private JButton divideBtn, mergeBtn;
+    /**
+     * Bottone per switchare al pannello di divisione
+     */
+    private JButton divideBtn;
+    /**
+     * Bottone per switchere al pannello di unione
+     */
+    private JButton mergeBtn;
+    /**
+     * Layout che permette a due pannelli di intercambiarsi rimanendo entrambi
+     * nella stessa posizione
+     */
     private CardLayout cardLayout;
 
+    /**
+     * Aggiunge i bottoni e la toolbar al pannello
+     *
+     * @param currentJob    indica su quale pannello si trova l'utente
+     * @param cardLayout    mantiene lo stesso cardLayout tra una classe e l'altra
+     */
     public JobsPanel(MainPanel currentJob, CardLayout cardLayout) {
         super();
         this.setLayout(new BorderLayout());
@@ -40,6 +64,12 @@ public class JobsPanel extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Gestisce lo switch tra il pannello di divisione e il pannello di
+     * unione
+     *
+     * @param e quale bottone è stato premuto
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(SplitFrame.DIVIDE_PANEL)

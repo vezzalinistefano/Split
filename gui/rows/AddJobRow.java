@@ -6,11 +6,11 @@ import javax.swing.*;
  * Classe che implementa il pannello riga contenente il bottone che aggiunge
  * il Job alla coda
  */
-public class AddDivideJobRow extends Row{
+public class AddJobRow extends Row{
 
     private JButton addJobBtn;
 
-    public AddDivideJobRow() {
+    public AddJobRow() {
         super();
 
         addJobBtn = new JButton("Aggiungi alla coda");
