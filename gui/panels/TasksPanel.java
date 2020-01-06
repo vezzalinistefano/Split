@@ -11,13 +11,13 @@ import java.awt.event.ActionListener;
  * Classe che implementa il JPanel della toolbar che permette
  * di scegliere quali operazioni eseguire
  */
-public class JobsPanel extends JPanel implements ActionListener {
+public class TasksPanel extends JPanel implements ActionListener {
 
     /**
      * Pannello principale che permette lo switch tra il pannello per
      * la divisione dei file e quello per l'unione dei file
      */
-    private MainPanel currentJob;
+    private MainPanel currentTask;
     /**
      * Toolbar contenente bottoni per scegliere che operazione fare
      */
@@ -39,13 +39,13 @@ public class JobsPanel extends JPanel implements ActionListener {
     /**
      * Aggiunge i bottoni e la toolbar al pannello
      *
-     * @param currentJob    indica su quale pannello si trova l'utente
-     * @param cardLayout    mantiene lo stesso cardLayout tra una classe e l'altra
+     * @param currentTask indica su quale pannello si trova l'utente
+     * @param cardLayout mantiene lo stesso cardLayout tra una classe e l'altra
      */
-    public JobsPanel(MainPanel currentJob, CardLayout cardLayout) {
+    public TasksPanel(MainPanel currentTask, CardLayout cardLayout) {
         super();
         this.setLayout(new BorderLayout());
-        this.currentJob = currentJob;
+        this.currentTask = currentTask;
         this.cardLayout = cardLayout;
 
         jobsBar = new JToolBar();
@@ -73,13 +73,13 @@ public class JobsPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(SplitFrame.DIVIDE_PANEL)
-                && currentJob.getCurrentJob().equals(SplitFrame.MERGE_PANEL)) {
-            cardLayout.show(currentJob, SplitFrame.DIVIDE_PANEL);
-            currentJob.setCurrentJob(SplitFrame.DIVIDE_PANEL);
+                && currentTask.getCurrentJob().equals(SplitFrame.MERGE_PANEL)) {
+            cardLayout.show(currentTask, SplitFrame.DIVIDE_PANEL);
+            currentTask.setCurrentJob(SplitFrame.DIVIDE_PANEL);
         } else if (e.getActionCommand().equals(SplitFrame.MERGE_PANEL)
-                && currentJob.getCurrentJob().equals(SplitFrame.DIVIDE_PANEL)) {
-            cardLayout.show(currentJob, SplitFrame.MERGE_PANEL);
-            currentJob.setCurrentJob(SplitFrame.MERGE_PANEL);
+                && currentTask.getCurrentJob().equals(SplitFrame.DIVIDE_PANEL)) {
+            cardLayout.show(currentTask, SplitFrame.MERGE_PANEL);
+            currentTask.setCurrentJob(SplitFrame.MERGE_PANEL);
         }
     }
 }

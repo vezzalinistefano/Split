@@ -32,7 +32,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
     /**
      * Pannello contenente il bottone che aggiunge il bottone alla coda dei job da eseguire
      */
-    private AddJobRow addJobRow;
+    private AddTaskRow addTaskRow;
 
     /**
      * Aggiunge i vari componenti al pannello
@@ -44,7 +44,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
         partsSettingsRow = new PartsSettingsRow();
         cryptRow = new CryptRow();
         compressRow = new CompressRow();
-        addJobRow = new AddJobRow();
+        addTaskRow = new AddTaskRow();
 
         this.add(Box.createVerticalStrut(8));
         this.add(chooseFileRow);
@@ -59,6 +59,6 @@ public class DivideSettingPanel extends DivideAndMergePanel {
         this.add(compressRow);
 
         this.add(Box.createVerticalStrut(8));
-        this.add(addJobRow);
+        this.add(addTaskRow);
     }
 }

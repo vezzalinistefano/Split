@@ -20,4 +20,8 @@ public class CompressRow extends Row {
 
         this.add(compressCheckBox);
     }
+
+    public Boolean getCompressSelection() {
+        return compressCheckBox.isSelected();
+    }
 }

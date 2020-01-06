@@ -1,7 +1,7 @@
 package gui;
 
 import gui.panels.DivideSettingPanel;
-import gui.panels.JobsPanel;
+import gui.panels.TasksPanel;
 import gui.panels.MainPanel;
 import gui.panels.MergeSettingPanel;
 
@@ -15,7 +15,7 @@ public class SplitFrame extends JFrame {
 
     private CardLayout cardLayout = new CardLayout();
     private MainPanel mainPanel;
-    private JobsPanel jobsPanel;
+    private TasksPanel jobsPanel;
     private DivideSettingPanel divideSettingPanel;
     private MergeSettingPanel mergeSettingPanel;
 
@@ -33,7 +33,7 @@ public class SplitFrame extends JFrame {
 
         divideSettingPanel = new DivideSettingPanel();
         mergeSettingPanel = new MergeSettingPanel();
-        jobsPanel = new JobsPanel(mainPanel, cardLayout);
+        jobsPanel = new TasksPanel(mainPanel, cardLayout);
 
         cp.add(jobsPanel, BorderLayout.PAGE_START);
         cp.add(Box.createHorizontalStrut(4));

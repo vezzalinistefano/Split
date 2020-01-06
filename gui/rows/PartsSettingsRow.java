@@ -1,7 +1,7 @@
 package gui.rows;
 
-import gui.customcomponents.CustomJSeparator;
-import gui.customcomponents.CustomJTextField;
+import gui.customComponents.CustomJSeparator;
+import gui.customComponents.CustomJTextField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.awt.*;
  * la dimensione delle parti e il numero di parti
  */
 public class PartsSettingsRow extends Row {
-    private JSpinner   spnrPartsNumber;
+    private JSpinner spnrPartsNumber;
     private CustomJTextField txtPartSize;
 
     public PartsSettingsRow() {
@@ -45,6 +45,17 @@ public class PartsSettingsRow extends Row {
         this.add(new JLabel("Numero parti  "));
 
         this.add(spnrPartsNumber);
+    }
 
+    public int getParts() {
+        return (Integer) spnrPartsNumber.getValue();
+    }
+
+    public int getFileSize() {
+        try{
+            int parts = Integer.parseInt(txtPartSize.getText());
+            if(parts > 0) return parts;
+            else return -1;
+        } catch (NumberFormatException e) { return -1; }
     }
 }
