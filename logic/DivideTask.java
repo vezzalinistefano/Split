@@ -23,4 +23,28 @@ public class DivideTask extends Task {
         this.compress = compress;
         this.keyword = keyword;
     }
+
+    public String getFileName() {
+        return file.getName();
+    }
+
+    public int getParts() {
+        return parts;
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public boolean isCrypt() {
+        return crypt;
+    }
+
+    public boolean isCompress() {
+        return compress;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
 }

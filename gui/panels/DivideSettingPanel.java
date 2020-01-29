@@ -1,13 +1,18 @@
 package gui.panels;
 
 import gui.SplitFrame;
+import gui.queueTable.QueueTableModel;
+import gui.queueTable.QueueTablePanel;
 import gui.rows.*;
 import logic.DivideTask;
+import logic.Task;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -39,10 +44,12 @@ public class DivideSettingPanel extends DivideAndMergePanel {
      */
     private AddDivideTaskRow addTaskRow;
 
+    private QueueTablePanel tablePanel;
+
     /**
      * Aggiunge i vari componenti al pannello
      */
-    public DivideSettingPanel(ActionListener divideListener) {
+    public DivideSettingPanel(ActionListener divideListener, QueueTablePanel tablePanel) {
         super(SplitFrame.DIVIDE_PANEL);
 
         chooseFileRow = new ChooseFileRow();
@@ -50,6 +57,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
         cryptRow = new CryptRow();
         compressRow = new CompressRow();
         addTaskRow = new AddDivideTaskRow(divideListener);
+        this.tablePanel = tablePanel;
 
         this.add(Box.createVerticalStrut(8));
         this.add(chooseFileRow);
@@ -67,7 +75,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
         this.add(addTaskRow);
     }
 
-    public void AddDivideTask(Vector tasksQueue) {
+    public void AddDivideTask(ArrayList<Task> tasksQueue) {
         for(File f : chooseFileRow.getFilesSelected()) {
             DivideTask divideTask = null;
 
@@ -75,5 +83,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
                     cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword());
             tasksQueue.add(divideTask);
         }
+        tablePanel.updateTableModel(tasksQueue);
     }
+
 }
