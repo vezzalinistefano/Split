@@ -39,7 +39,7 @@ public class ChooseFileRow extends Row {
         this.add(txtFileSelected);
     }
 
-    public void showFilesSelected() {
+    private void showFilesSelected() {
         StringBuilder filesSelected = new StringBuilder();
         for (File f : fileChooser.getSelectedFiles()) {
             filesSelected.append(f.getName());
@@ -53,12 +53,7 @@ public class ChooseFileRow extends Row {
         txtFileSelected.setText("");
     }
 
-    public Vector getFilesSelected() {
-        Vector v = null;
-        for (File f : fileChooser.getSelectedFiles()) {
-            v.add(f);
-        }
-
-        return v;
+    public File[] getFilesSelected() {
+        return fileChooser.getSelectedFiles();
     }
 }

@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * Classe che estende JPanel settando già il Box Layout allineato a sinistra
  */
-public class Row extends JPanel{
+public abstract class Row extends JPanel{
 
     public Row() {
         super();

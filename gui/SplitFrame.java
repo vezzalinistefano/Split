@@ -7,11 +7,16 @@ import gui.panels.MergeSettingPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 /**
  * Classe che implementa il frame contenente il programma
  */
 public class SplitFrame extends JFrame {
+
+    private Vector tasksQueue;
 
     private CardLayout cardLayout = new CardLayout();
     private MainPanel mainPanel;
@@ -31,7 +36,14 @@ public class SplitFrame extends JFrame {
 
         Container cp = getContentPane();
 
-        divideSettingPanel = new DivideSettingPanel();
+        ActionListener divideTaskListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                divideSettingPanel.AddDivideTask(tasksQueue);
+            }
+        };
+        divideSettingPanel = new DivideSettingPanel(divideTaskListener);
+
         mergeSettingPanel = new MergeSettingPanel();
         jobsPanel = new TasksPanel(mainPanel, cardLayout);
 

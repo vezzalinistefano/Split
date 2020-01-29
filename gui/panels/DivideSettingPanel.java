@@ -2,8 +2,13 @@ package gui.panels;
 
 import gui.SplitFrame;
 import gui.rows.*;
+import logic.DivideTask;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Vector;
 
 /**
  * Classe che implementa il pannello contenente i componenti per impostare
@@ -32,19 +37,19 @@ public class DivideSettingPanel extends DivideAndMergePanel {
     /**
      * Pannello contenente il bottone che aggiunge il bottone alla coda dei job da eseguire
      */
-    private AddTaskRow addTaskRow;
+    private AddDivideTaskRow addTaskRow;
 
     /**
      * Aggiunge i vari componenti al pannello
      */
-    public DivideSettingPanel() {
+    public DivideSettingPanel(ActionListener divideListener) {
         super(SplitFrame.DIVIDE_PANEL);
 
         chooseFileRow = new ChooseFileRow();
         partsSettingsRow = new PartsSettingsRow();
         cryptRow = new CryptRow();
         compressRow = new CompressRow();
-        addTaskRow = new AddTaskRow();
+        addTaskRow = new AddDivideTaskRow(divideListener);
 
         this.add(Box.createVerticalStrut(8));
         this.add(chooseFileRow);
@@ -60,5 +65,15 @@ public class DivideSettingPanel extends DivideAndMergePanel {
 
         this.add(Box.createVerticalStrut(8));
         this.add(addTaskRow);
+    }
+
+    public void AddDivideTask(Vector tasksQueue) {
+        for(File f : chooseFileRow.getFilesSelected()) {
+            DivideTask divideTask = null;
+
+            divideTask = new DivideTask(f, partsSettingsRow.getParts(), partsSettingsRow.getFileSize(),
+                    cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword());
+            tasksQueue.add(divideTask);
+        }
     }
 }
