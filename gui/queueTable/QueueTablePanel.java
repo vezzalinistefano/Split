@@ -9,12 +9,13 @@ import java.util.ArrayList;
 public class QueueTablePanel extends JPanel {
     private QueueTableModel queueTableModel;
     public QueueTablePanel(ArrayList<Task> tasksQueue) {
-        super();
 
         queueTableModel = new QueueTableModel(tasksQueue);
         JTable queueTable = new JTable(queueTableModel);
 
-        this.add(queueTable);
+        JScrollPane scrollPane = new JScrollPane(queueTable);
+
+        this.add(scrollPane);
     }
 
     public void updateTableModel(ArrayList<Task> tasksQueue) {

@@ -35,9 +35,7 @@ public class SplitFrame extends JFrame {
         this.setTitle("Split");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        //Container cp = getContentPane();
         mainPanel = new JTabbedPane();
-        //mainPanel.setLayout(cardLayout);
 
         queueTablePanel = new QueueTablePanel(tasksQueue);
         ActionListener divideTaskListener = new ActionListener() {
@@ -50,19 +48,14 @@ public class SplitFrame extends JFrame {
         divideSettingPanel = new DivideSettingPanel(divideTaskListener, queueTablePanel);
 
         mergeSettingPanel = new MergeSettingPanel();
-        //tasksPanel = new TasksPanel(mainPanel, cardLayout);
 
-        //this.add(tasksPanel, BorderLayout.PAGE_START);
-        //this.add(Box.createHorizontalStrut(4));
 
         mainPanel.addTab(DIVIDE_PANEL, divideSettingPanel);
         mainPanel.addTab(MERGE_PANEL, mergeSettingPanel);
-        //cardLayout.show(mainPanel, DIVIDE_PANEL);
 
         this.add(mainPanel, BorderLayout.NORTH);
 
-        JScrollPane scrollPane = new JScrollPane(queueTablePanel);
-        this.add(scrollPane, BorderLayout.CENTER);
+        this.add(queueTablePanel, BorderLayout.CENTER);
 
         this.pack();
     }
