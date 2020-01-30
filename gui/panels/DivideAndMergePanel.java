@@ -2,6 +2,7 @@ package gui.panels;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.io.File;
 import java.util.Vector;
 
@@ -19,7 +20,7 @@ public abstract class DivideAndMergePanel extends JPanel {
     public DivideAndMergePanel(String title) {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorderTitle(title);
+        //this.setBorderTitle(title);
     }
 
     /**

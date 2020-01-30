@@ -1,6 +1,7 @@
 package gui.rows;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
@@ -17,6 +18,7 @@ public class AddDivideTaskRow extends Row {
         addJobBtn = new JButton("Aggiungi alla coda");
         addJobBtn.addActionListener(onClick);
 
+        this.add(Box.createRigidArea(new Dimension(5,0)));
         this.add(addJobBtn);
     }
 }

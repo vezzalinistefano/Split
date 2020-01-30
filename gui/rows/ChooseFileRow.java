@@ -21,7 +21,7 @@ public class ChooseFileRow extends Row {
 
         fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(true);
-        fileChooser.setCurrentDirectory(new File("."));
+        fileChooser.setCurrentDirectory(new File("C:\\Users\\Stefano\\Music\\MusicBee\\Music"));
 
         fileBtn = new JButton("Scegli file");
         fileBtn.addActionListener(e -> {
@@ -43,7 +43,6 @@ public class ChooseFileRow extends Row {
         StringBuilder filesSelected = new StringBuilder();
         for (File f : fileChooser.getSelectedFiles()) {
             filesSelected.append(f.getName());
-            filesSelected.append(", ");
         }
         txtFileSelected.setText(filesSelected.toString());
     }

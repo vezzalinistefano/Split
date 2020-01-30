@@ -1,14 +1,15 @@
 package gui;
 
-import gui.panels.DivideSettingPanel;
-import gui.panels.TasksPanel;
-import gui.panels.MainPanel;
-import gui.panels.MergeSettingPanel;
+import gui.panels.*;
+import gui.queueTable.QueueTablePanel;
+import gui.rows.TasksManagementRow;
+import logic.Task;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -16,13 +17,13 @@ import java.util.Vector;
  */
 public class SplitFrame extends JFrame {
 
-    private Vector tasksQueue;
+    private ArrayList<Task> tasksQueue = new ArrayList<Task>();
 
-    private CardLayout cardLayout = new CardLayout();
-    private MainPanel mainPanel;
-    private TasksPanel jobsPanel;
+    private JTabbedPane mainPanel;
     private DivideSettingPanel divideSettingPanel;
     private MergeSettingPanel mergeSettingPanel;
+    private QueueTablePanel queueTablePanel;
+    private TasksManagementPanel tasksManagementPanel;
 
     public static final String DIVIDE_PANEL = "Dividi";
     public static final String MERGE_PANEL = "Unisci";
@@ -31,29 +32,37 @@ public class SplitFrame extends JFrame {
         this.setTitle("Split");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        mainPanel = new MainPanel(DIVIDE_PANEL);
-        mainPanel.setLayout(cardLayout);
+        mainPanel = new JTabbedPane();
 
-        Container cp = getContentPane();
-
+        queueTablePanel = new QueueTablePanel(tasksQueue);
         ActionListener divideTaskListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 divideSettingPanel.AddDivideTask(tasksQueue);
             }
         };
-        divideSettingPanel = new DivideSettingPanel(divideTaskListener);
+        divideSettingPanel = new DivideSettingPanel(divideTaskListener, queueTablePanel);
 
         mergeSettingPanel = new MergeSettingPanel();
-        jobsPanel = new TasksPanel(mainPanel, cardLayout);
 
-        cp.add(jobsPanel, BorderLayout.PAGE_START);
-        cp.add(Box.createHorizontalStrut(4));
 
-        mainPanel.add(divideSettingPanel, DIVIDE_PANEL);
-        mainPanel.add(mergeSettingPanel, MERGE_PANEL);
-        cardLayout.show(mainPanel, DIVIDE_PANEL);
-        cp.add(mainPanel);
+        mainPanel.addTab(DIVIDE_PANEL, divideSettingPanel);
+        mainPanel.addTab(MERGE_PANEL, mergeSettingPanel);
+
+        this.add(mainPanel, BorderLayout.NORTH);
+
+        this.add(queueTablePanel, BorderLayout.CENTER);
+
+        ActionListener startTasksListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                tasksManagementPanel.startTasks(tasksQueue);
+            }
+        };
+        tasksManagementPanel = new TasksManagementPanel(startTasksListener);
+        this.add(tasksManagementPanel, BorderLayout.SOUTH);
+
         this.pack();
     }
 }
