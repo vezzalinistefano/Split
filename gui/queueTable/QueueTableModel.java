@@ -1,7 +1,6 @@
 package gui.queueTable;
 
 import logic.DivideTask;
-import logic.MergeTask;
 import logic.Task;
 
 import javax.swing.table.AbstractTableModel;
@@ -48,7 +47,7 @@ public class QueueTableModel extends AbstractTableModel {
                     case 2:
                         return ((DivideTask) t).isCrypt();
                     case 3:
-                        return "" + ((DivideTask) t).getParts() + " da " + ((DivideTask) t).getDimension();
+                        return "" + ((DivideTask) t).getParts() + " da " + ((DivideTask) t).getSizeOfFiles();
                     case 4:
                         return ((DivideTask) t).getKeyword();
                     default:

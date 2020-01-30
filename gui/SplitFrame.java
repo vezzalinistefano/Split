@@ -1,10 +1,8 @@
 package gui;
 
-import gui.panels.DivideSettingPanel;
-import gui.panels.TasksPanel;
-import gui.panels.MainPanel;
-import gui.panels.MergeSettingPanel;
+import gui.panels.*;
 import gui.queueTable.QueueTablePanel;
+import gui.rows.TasksManagementRow;
 import logic.Task;
 
 import javax.swing.*;
@@ -21,12 +19,11 @@ public class SplitFrame extends JFrame {
 
     private ArrayList<Task> tasksQueue = new ArrayList<Task>();
 
-    private CardLayout cardLayout = new CardLayout();
     private JTabbedPane mainPanel;
-    private TasksPanel tasksPanel;
     private DivideSettingPanel divideSettingPanel;
     private MergeSettingPanel mergeSettingPanel;
     private QueueTablePanel queueTablePanel;
+    private TasksManagementPanel tasksManagementPanel;
 
     public static final String DIVIDE_PANEL = "Dividi";
     public static final String MERGE_PANEL = "Unisci";
@@ -41,7 +38,6 @@ public class SplitFrame extends JFrame {
         ActionListener divideTaskListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
                 divideSettingPanel.AddDivideTask(tasksQueue);
             }
         };
@@ -56,6 +52,16 @@ public class SplitFrame extends JFrame {
         this.add(mainPanel, BorderLayout.NORTH);
 
         this.add(queueTablePanel, BorderLayout.CENTER);
+
+        ActionListener startTasksListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                tasksManagementPanel.startTasks(tasksQueue);
+            }
+        };
+        tasksManagementPanel = new TasksManagementPanel(startTasksListener);
+        this.add(tasksManagementPanel, BorderLayout.SOUTH);
 
         this.pack();
     }

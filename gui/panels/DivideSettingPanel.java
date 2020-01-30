@@ -86,4 +86,6 @@ public class DivideSettingPanel extends DivideAndMergePanel {
         tablePanel.updateTableModel(tasksQueue);
     }
 
+    public void cleanFileSelected() { chooseFileRow.cleanSelectedFiles();}
+
 }

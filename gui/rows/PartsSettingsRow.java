@@ -30,9 +30,10 @@ public class PartsSettingsRow extends Row {
 
         this.add(new JLabel("Dimensioni parti  "));
 
+        txtPartSize.setText("1");
         this.add(txtPartSize);
 
-        this.add(new JLabel("  B"));
+        this.add(new JLabel("  MB"));
 
         this.add(Box.createRigidArea(new Dimension(10,0)));
 
