@@ -59,7 +59,6 @@ public class QueueTableModel extends AbstractTableModel {
             }
         }
         return "";
-        //Comment
     }
 
 }

@@ -1,6 +1,8 @@
 package logic;
 
 import java.io.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class DivideTask extends Task {
     private File file;
@@ -57,16 +59,45 @@ public class DivideTask extends Task {
 
         try (FileInputStream fis = new FileInputStream(file);
              BufferedInputStream bis = new BufferedInputStream(fis)) {
-
             int bytesAmount = 0;
             while ((bytesAmount = bis.read(buffer)) > 0) {
+                String filePartName = String.format("%03d-%s", partIdx++, fileName);
 
-                String filePartName = String.format("%s(%03d)", fileName, partIdx++);
                 File newFile = new File(file.getParent(), filePartName);
                 try (FileOutputStream out = new FileOutputStream(newFile)) {
                     out.write(buffer, 0, bytesAmount);
+                    out.close();
+                    if(this.compress) {
+                        compressFile(newFile.getPath());
+                        newFile.delete();
+                    }
                 }
             }
+        }
+    }
+
+    private void compressFile(String path) {
+        File f = new File(path);
+        String zipFileName = String.format(path + ".zip", f.getName());
+
+        try {
+            FileOutputStream fos = new FileOutputStream(zipFileName);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+
+            zos.putNextEntry(new ZipEntry(f.getName()));
+
+            byte[] zBuffer = new byte[(int)f.length()];
+            FileInputStream fis = new FileInputStream(f);
+            fis.read(zBuffer);
+            fis.close();
+
+            zos.write(zBuffer, 0, zBuffer.length);
+            zos.closeEntry();
+            zos.close();
+        } catch (FileNotFoundException ex) {
+            //TODO future log
+        } catch (IOException ex) {
+            //TODO future log
         }
     }
 }
