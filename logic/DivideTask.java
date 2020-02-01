@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Classe che estende {@link Task} implementando un task di divisione di un file
+ */
 public class DivideTask extends Task {
     private File file;
 
@@ -56,7 +59,7 @@ public class DivideTask extends Task {
         return keyword;
     }
 
-    public void fileSplit() throws IOException {
+    public void performTask() throws IOException {
         String fileName = file.getName();
 
         byte[] buffer = new byte[sizeOfFiles * 1024 * 1024];

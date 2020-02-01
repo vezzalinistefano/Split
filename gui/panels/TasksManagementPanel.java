@@ -27,7 +27,7 @@ public class TasksManagementPanel extends JPanel {
         for(Task t : tasks) {
             if(t instanceof DivideTask) {
                 try {
-                    ((DivideTask) t).fileSplit();
+                    ((DivideTask) t).performTask();
                 } catch (IOException e) {
                     //TODO: gestione eccezione file split
                     System.out.println(e.getMessage());
