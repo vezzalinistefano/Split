@@ -1,6 +1,12 @@
 package logic;
 
+import javax.crypto.*;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import java.io.*;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -67,8 +73,12 @@ public class DivideTask extends Task {
                 try (FileOutputStream out = new FileOutputStream(newFile)) {
                     out.write(buffer, 0, bytesAmount);
                     out.close();
-                    if(this.compress) {
+                    if (this.compress) {
                         compressFile(newFile.getPath());
+                        newFile.delete();
+                    }
+                    if(this.crypt) {
+                        encryptFile(newFile);
                         newFile.delete();
                     }
                 }
@@ -78,7 +88,7 @@ public class DivideTask extends Task {
 
     private void compressFile(String path) {
         File f = new File(path);
-        String zipFileName = String.format(path + ".zip", f.getName());
+        String zipFileName = String.format(path + ".zip");
 
         try {
             FileOutputStream fos = new FileOutputStream(zipFileName);
@@ -86,7 +96,7 @@ public class DivideTask extends Task {
 
             zos.putNextEntry(new ZipEntry(f.getName()));
 
-            byte[] zBuffer = new byte[(int)f.length()];
+            byte[] zBuffer = new byte[(int) f.length()];
             FileInputStream fis = new FileInputStream(f);
             fis.read(zBuffer);
             fis.close();
@@ -98,6 +108,43 @@ public class DivideTask extends Task {
             //TODO future log
         } catch (IOException ex) {
             //TODO future log
+        }
+    }
+
+    private void encryptFile(File f) {
+        try {
+            String cryptFileName = f.getPath() + ".crypt";
+
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(this.keyword.toCharArray());
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory
+                    .getInstance("PBEWithMD5AndTripleDES");
+            SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);
+
+            byte[] salt = new byte[8];
+            Random random = new Random();
+            random.nextBytes(salt);
+
+            PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
+            Cipher cipher = Cipher.getInstance("PBEWithMD5AndTripleDES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, pbeParameterSpec);
+
+            FileInputStream inputStream = new FileInputStream(f);
+            byte[] inputBytes = new byte[(int) f.length()];
+            inputStream.read(inputBytes);
+
+            byte[] cryptBuffer = cipher.doFinal(inputBytes);
+
+            FileOutputStream fos = new FileOutputStream(cryptFileName);
+            fos.write(cryptBuffer, 0, cryptBuffer.length);
+
+            inputStream.close();
+            fos.close();
+
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
+                | IOException | BadPaddingException | InvalidKeySpecException
+                | InvalidAlgorithmParameterException e) {
+            //TODO future log
+            System.err.println(e.getMessage());
         }
     }
 }
