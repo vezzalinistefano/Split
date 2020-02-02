@@ -81,7 +81,7 @@ public class DivideTask extends Task {
                         newFile.delete();
                     }
                     if(this.crypt) {
-                        encryptFile(newFile);
+                        super.encryptFile(newFile, Cipher.ENCRYPT_MODE, this.keyword);
                         newFile.delete();
                     }
                 }
@@ -111,43 +111,6 @@ public class DivideTask extends Task {
             //TODO future log
         } catch (IOException ex) {
             //TODO future log
-        }
-    }
-
-    private void encryptFile(File f) {
-        try {
-            String cryptFileName = f.getPath() + ".crypt";
-
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(this.keyword.toCharArray());
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory
-                    .getInstance("PBEWithMD5AndTripleDES");
-            SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);
-
-            byte[] salt = new byte[8];
-            Random random = new Random();
-            random.nextBytes(salt);
-
-            PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
-            Cipher cipher = Cipher.getInstance("PBEWithMD5AndTripleDES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, pbeParameterSpec);
-
-            FileInputStream inputStream = new FileInputStream(f);
-            byte[] inputBytes = new byte[(int) f.length()];
-            inputStream.read(inputBytes);
-
-            byte[] cryptBuffer = cipher.doFinal(inputBytes);
-
-            FileOutputStream fos = new FileOutputStream(cryptFileName);
-            fos.write(cryptBuffer, 0, cryptBuffer.length);
-
-            inputStream.close();
-            fos.close();
-
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
-                | IOException | BadPaddingException | InvalidKeySpecException
-                | InvalidAlgorithmParameterException e) {
-            //TODO future log
-            System.err.println(e.getMessage());
         }
     }
 }
