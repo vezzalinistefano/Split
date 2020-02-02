@@ -23,7 +23,11 @@ public abstract class Task {
 
     public void encryptFile(File f, int mode, String keyword) {
         try {
-            String cryptFileName = f.getPath() + ".crypt";
+            String cryptFileName = new String();
+            if(mode == Cipher.ENCRYPT_MODE)
+                cryptFileName = f.getPath() + ".crypt";
+            else if(mode == Cipher.DECRYPT_MODE)
+                cryptFileName.replace(".crypt", "");
 
             PBEKeySpec pbeKeySpec = new PBEKeySpec(keyword.toCharArray());
             SecretKeyFactory secretKeyFactory = SecretKeyFactory
