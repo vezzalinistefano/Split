@@ -2,6 +2,7 @@ package gui.panels;
 
 import gui.rows.TasksManagementRow;
 import logic.DivideTask;
+import logic.MergeTask;
 import logic.Task;
 
 import javax.swing.*;
@@ -24,14 +25,16 @@ public class TasksManagementPanel extends JPanel {
     }
 
     public void startTasks(ArrayList<Task> tasks) {
-        for(Task t : tasks) {
-            if(t instanceof DivideTask) {
+        for (Task t : tasks) {
+            if (t instanceof DivideTask) {
                 try {
                     ((DivideTask) t).performTask();
                 } catch (IOException e) {
                     //TODO: gestione eccezione file split
                     System.out.println(e.getMessage());
                 }
+            } else if (t instanceof MergeTask) {
+                    ((MergeTask)t).performTask();
             }
         }
     }
