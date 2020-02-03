@@ -51,13 +51,16 @@ public class MergeTask extends Task {
         return this.keyword;
     }
 
-    public void performTask() {
-        for (File f : this.files) {
-            if (isCrypted(f)) {
-                decryptFile(f);
-            }
-            if (isZipped(f)) {
-                unzipFile(f);
+    public void performTask() throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(this.ogFileName);
+             BufferedOutputStream mergingStream = new BufferedOutputStream(fos)) {
+            for (File f : this.files) {
+                if (isCrypted(f)) {
+                    decryptFile(f);
+                }
+                if (isZipped(f)) {
+                    unzipFile(f);
+                }
             }
         }
     }
