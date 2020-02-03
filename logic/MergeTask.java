@@ -8,7 +8,8 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -17,11 +18,37 @@ public class MergeTask extends Task {
 
     private String keyword;
 
+    private String ogFileName;
+
     public MergeTask(File[] files, String keyword) {
         super();
 
         this.files = files;
         this.keyword = keyword;
+
+        File f = files[0];
+        String fileName = f.getName();
+
+        if (isZipped(f)) {
+            fileName = fileName.replace(".zip", "");
+        }
+        if (isCrypted(f)) {
+            fileName = fileName.replace(".crypt", "");
+        }
+
+        Pattern pattern = Pattern.compile("(?![0-9])(?!-).*$");
+        Matcher matcher = pattern.matcher(fileName);
+        if (matcher.find()) {
+            this.ogFileName = matcher.group(0);
+        }
+    }
+
+    public String getFileName() {
+        return this.ogFileName;
+    }
+
+    public String getKeyword() {
+        return this.keyword;
     }
 
     public void performTask() {
@@ -29,7 +56,7 @@ public class MergeTask extends Task {
             if (isCrypted(f)) {
                 decryptFile(f);
             }
-            if(isZipped(f)) {
+            if (isZipped(f)) {
                 unzipFile(f);
             }
         }
