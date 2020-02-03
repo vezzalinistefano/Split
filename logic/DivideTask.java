@@ -36,7 +36,6 @@ public class DivideTask extends Task {
         this.keyword = keyword;
 
         if (this.parts != -1) {
-            System.out.println(""+Math.ceil((double)file.length() / parts));
             this.sizeOfFiles = (int)Math.ceil((double)file.length() / parts);
         } else {
             this.sizeOfFiles = sizeOfFiles * 1024 * 1024;
@@ -61,9 +60,6 @@ public class DivideTask extends Task {
 
     public void performTask() throws IOException {
         String fileName = file.getName();
-        System.out.println(""+sizeOfFiles);
-        System.out.println(""+(int)Math.ceil(sizeOfFiles));
-        System.out.println(""+(int)file.length());
         byte[] buffer = new byte[sizeOfFiles];
 
         int partIdx = 1;
@@ -93,8 +89,7 @@ public class DivideTask extends Task {
 
     private void encryptFile() {
         try {
-            String cryptFileName = new String();
-            cryptFileName = file.getPath() + ".crypt";
+            String cryptFileName = file.getPath() + ".crypt";
 
 
             PBEKeySpec pbeKeySpec = new PBEKeySpec(keyword.toCharArray());

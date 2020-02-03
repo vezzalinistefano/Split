@@ -18,7 +18,9 @@ public class MergeTask extends Task {
 
     private String keyword;
 
-    private String ogFileName;
+    private String mergedFileName;
+
+    private String mergedFilePath;
 
     public MergeTask(File[] files, String keyword) {
         super();
@@ -39,12 +41,13 @@ public class MergeTask extends Task {
         Pattern pattern = Pattern.compile("(?![0-9])(?!-).*$");
         Matcher matcher = pattern.matcher(fileName);
         if (matcher.find()) {
-            this.ogFileName = matcher.group(0);
+            this.mergedFilePath = f.getParent() + File.separator + matcher.group(0);
+            this.mergedFileName = matcher.group(0);
         }
     }
 
     public String getFileName() {
-        return this.ogFileName;
+        return this.mergedFileName;
     }
 
     public String getKeyword() {
@@ -52,17 +55,27 @@ public class MergeTask extends Task {
     }
 
     public void performTask() throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(this.ogFileName);
-             BufferedOutputStream mergingStream = new BufferedOutputStream(fos)) {
-            for (File f : this.files) {
-                if (isCrypted(f)) {
-                    decryptFile(f);
-                }
-                if (isZipped(f)) {
-                    unzipFile(f);
-                }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer;
+        for (File f : this.files) {
+            if (isCrypted(f)) {
+                decryptFile(f);
             }
+            if (isZipped(f)) {
+                unzipFile(f);
+            }
+            FileInputStream fis = new FileInputStream(f);
+
+            buffer = new byte[(int) f.length()];
+
+            fis.read(buffer);
+
+            baos.write(buffer);
         }
+
+        FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
+        byte[] totBuffer = baos.toByteArray();
+        fos.write(totBuffer, 0, totBuffer.length);
     }
 
     private boolean isZipped(File f) {
@@ -131,5 +144,13 @@ public class MergeTask extends Task {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private int getTotalSize() {
+        long totSize = 0;
+        for (File f : this.files) {
+            totSize += f.length();
+        }
+        return (int) totSize;
     }
 }
