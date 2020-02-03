@@ -1,6 +1,7 @@
 package gui.queueTable;
 
 import logic.DivideTask;
+import logic.MergeTask;
 import logic.Task;
 
 import javax.swing.table.AbstractTableModel;
@@ -10,13 +11,13 @@ import java.util.ArrayList;
 public class QueueTableModel extends AbstractTableModel {
 
     private ArrayList<Task> tasks = null;
-    private String[] colName = {"File", "Comprimi", "Cripta", "Parola chiave", "Avanzamento"};
+    private String[] colName = {"Modalità", "File", "Comprimi", "Cripta", "Parola chiave", "Avanzamento"};
 
     public QueueTableModel(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
 
-    public void update(){
+    public void update() {
         this.fireTableDataChanged();
     }
 
@@ -31,7 +32,9 @@ public class QueueTableModel extends AbstractTableModel {
     }
 
     @Override
-    public String getColumnName(int col) {return colName[col];}
+    public String getColumnName(int col) {
+        return colName[col];
+    }
 
     @Override
     public Object getValueAt(int rowIndex, int colIndex) {
@@ -41,24 +44,33 @@ public class QueueTableModel extends AbstractTableModel {
             if (t instanceof DivideTask) {
                 switch (colIndex) {
                     case 0:
-                        return ((DivideTask) t).getFileName();
+                        return "Divisione";
                     case 1:
-                        return ((DivideTask) t).isCompress();
+                        return ((DivideTask) t).getFileName();
                     case 2:
-                        return ((DivideTask) t).isCrypt();
+                        return ((DivideTask) t).isCompress();
                     case 3:
-                        return "" + ((DivideTask) t).getParts() + " da " + ((DivideTask) t).getSizeOfFiles();
+                        return ((DivideTask) t).isCrypt();
                     case 4:
-                        return ((DivideTask) t).getKeyword();
+                        return "" + ((DivideTask) t).getKeyword();
+                    case 5:
+                        return "";//TODO progress bar
                     default:
                         return "";
                 }
             } else {
-                //TODO: getvalueat() per istanze di MergeTask
-                return "";
+                switch (colIndex) {
+                    case 0:
+                        return "Unione";
+                    case 1:
+                        return ((MergeTask) t).getFileName();
+                    case 4:
+                        return "" + ((MergeTask) t).getKeyword();
+                    default:
+                        return "";
+                }
             }
         }
         return "";
     }
-
 }

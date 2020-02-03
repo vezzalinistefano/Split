@@ -34,7 +34,12 @@ public class TasksManagementPanel extends JPanel {
                     System.out.println(e.getMessage());
                 }
             } else if (t instanceof MergeTask) {
-                    ((MergeTask)t).performTask();
+                try {
+                    ((MergeTask) t).performTask();
+                } catch (IOException e) {
+                    //TODO: gestione eccezione file split
+                    System.out.println(e.getMessage());
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ public class QueueTablePanel extends JPanel {
     private QueueTableModel queueTableModel;
     public QueueTablePanel(ArrayList<Task> tasksQueue) {
 
+        this.setLayout(new GridLayout());
         queueTableModel = new QueueTableModel(tasksQueue);
         JTable queueTable = new JTable(queueTableModel);
 
