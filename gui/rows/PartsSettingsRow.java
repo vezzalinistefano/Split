@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
  * Classe che implementa il pannello riga che permette all'utente di selezionare
  * la dimensione delle parti e il numero di parti
  */
-public class PartsSettingsRow extends Row implements ItemListener{
+public class PartsSettingsRow extends Row implements ItemListener {
     private JSpinner spnrPartsNumber;
     private CustomJTextField txtPartSize;
 
@@ -98,7 +98,7 @@ public class PartsSettingsRow extends Row implements ItemListener{
 
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
-        if(byPartsCheckBox.isSelected()) {
+        if (byPartsCheckBox.isSelected()) {
             txtPartSize.setEnabled(false);
             spnrPartsNumber.setEnabled(true);
         } else if (bySizeCheckBox.isSelected()) {

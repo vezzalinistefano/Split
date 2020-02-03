@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class MergeTask extends Task {
@@ -34,7 +33,7 @@ public class MergeTask extends Task {
         if (isZipped(f)) {
             fileName = fileName.replace(".zip", "");
         }
-        if (isCrypted(f)) {
+        if (isEncrypted(f)) {
             fileName = fileName.replace(".crypt", "");
         }
 
@@ -58,11 +57,11 @@ public class MergeTask extends Task {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer;
         for (File f : this.files) {
-            if (isCrypted(f)) {
-                decryptFile(f);
+            if (isEncrypted(f)) {
+                f = decryptFile(f);
             }
             if (isZipped(f)) {
-                unzipFile(f);
+                f = unzipFile(f);
             }
             FileInputStream fis = new FileInputStream(f);
 
@@ -71,22 +70,25 @@ public class MergeTask extends Task {
             fis.read(buffer);
 
             baos.write(buffer);
+            fis.close();
         }
 
         FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
         byte[] totBuffer = baos.toByteArray();
+        baos.close();
         fos.write(totBuffer, 0, totBuffer.length);
+        fos.close();
     }
 
     private boolean isZipped(File f) {
         return (f.getName().contains(".zip"));
     }
 
-    private boolean isCrypted(File f) {
+    private boolean isEncrypted(File f) {
         return (f.getName().contains(".crypt"));
     }
 
-    private void decryptFile(File file) {
+    private File decryptFile(File file) {
         try {
             String newFileName;
             newFileName = file.getPath();
@@ -105,32 +107,38 @@ public class MergeTask extends Task {
             PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
 
             Cipher cipher = Cipher.getInstance("PBEWithMD5AndTripleDES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, pbeParameterSpec);
-
-            byte[] cryptBuffer = cipher.doFinal();
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, pbeParameterSpec);
 
             FileOutputStream fos = new FileOutputStream(newFileName);
-            fos.write(cryptBuffer, 0, cryptBuffer.length);
+
+            byte[] output = cipher.doFinal();
+            fos.write(output, 0, output.length);
 
             inputStream.close();
             fos.close();
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
-                | IOException | BadPaddingException | InvalidKeySpecException
+            file = new File(newFileName);
+
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+                | IOException | InvalidKeySpecException
                 | InvalidAlgorithmParameterException e) {
             //TODO future log
             System.err.println(e.getMessage());
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
         }
+        return file;
     }
 
-    private void unzipFile(File f) {
+    private File unzipFile(File f) {
         String newFileName = f.getPath().replace(".zip", "");
         FileInputStream fis;
         byte[] buffer = new byte[1024];
         try {
             fis = new FileInputStream(f);
             ZipInputStream zis = new ZipInputStream(fis);
-            ZipEntry ze = zis.getNextEntry();
 
             FileOutputStream fos = new FileOutputStream(newFileName);
             int len;
@@ -144,13 +152,8 @@ public class MergeTask extends Task {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
 
-    private int getTotalSize() {
-        long totSize = 0;
-        for (File f : this.files) {
-            totSize += f.length();
-        }
-        return (int) totSize;
+        f = new File(newFileName);
+        return f;
     }
 }

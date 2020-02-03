@@ -79,7 +79,7 @@ public class DivideTask extends Task {
                         newFile.delete();
                     }
                     if (this.crypt) {
-                        encryptFile();
+                        encryptFile(newFile.getPath());
                         newFile.delete();
                     }
                 }
@@ -87,9 +87,9 @@ public class DivideTask extends Task {
         }
     }
 
-    private void encryptFile() {
+    private void encryptFile(String path) {
         try {
-            String cryptFileName = file.getPath() + ".crypt";
+            String cryptFileName = path + ".crypt";
 
 
             PBEKeySpec pbeKeySpec = new PBEKeySpec(keyword.toCharArray());
