@@ -18,7 +18,7 @@ import java.util.zip.ZipOutputStream;
 public class DivideTask extends Task {
     private File file;
 
-    private int parts;
+    private double parts;
 
     private int sizeOfFiles;
 
@@ -31,22 +31,20 @@ public class DivideTask extends Task {
     public DivideTask(File file, int parts, int sizeOfFiles, boolean crypt, boolean compress, String keyword) {
         this.file = file;
         this.parts = parts;
-        this.sizeOfFiles = sizeOfFiles;
         this.crypt = crypt;
         this.compress = compress;
         this.keyword = keyword;
+
+        if (this.parts != -1) {
+            System.out.println(""+Math.ceil((double)file.length() / parts));
+            this.sizeOfFiles = (int)Math.ceil((double)file.length() / parts);
+        } else {
+            this.sizeOfFiles = sizeOfFiles * 1024 * 1024;
+        }
     }
 
     public String getFileName() {
         return file.getName();
-    }
-
-    public int getParts() {
-        return parts;
-    }
-
-    public int getSizeOfFiles() {
-        return sizeOfFiles;
     }
 
     public String isCrypt() {
@@ -63,8 +61,10 @@ public class DivideTask extends Task {
 
     public void performTask() throws IOException {
         String fileName = file.getName();
-
-        byte[] buffer = new byte[sizeOfFiles * 1024 * 1024];
+        System.out.println(""+sizeOfFiles);
+        System.out.println(""+(int)Math.ceil(sizeOfFiles));
+        System.out.println(""+(int)file.length());
+        byte[] buffer = new byte[sizeOfFiles];
 
         int partIdx = 1;
 
