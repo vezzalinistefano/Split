@@ -83,9 +83,8 @@ public class DivideSettingPanel extends DivideAndMergePanel {
                     cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword());
             tasksQueue.add(divideTask);
         }
-        tablePanel.updateTableModel(tasksQueue);
+        tablePanel.updateTableModel();
+        chooseFileRow.cleanSelectedFiles();
     }
-
-    public void cleanFileSelected() { chooseFileRow.cleanSelectedFiles();}
 
 }

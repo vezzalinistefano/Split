@@ -43,7 +43,13 @@ public class SplitFrame extends JFrame {
         };
         divideSettingPanel = new DivideSettingPanel(divideTaskListener, queueTablePanel);
 
-        mergeSettingPanel = new MergeSettingPanel();
+        ActionListener mergeTaskListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                mergeSettingPanel.AddMergeTask(tasksQueue);
+            }
+        };
+        mergeSettingPanel = new MergeSettingPanel(mergeTaskListener, queueTablePanel);
 
 
         mainPanel.addTab(DIVIDE_PANEL, divideSettingPanel);
@@ -58,6 +64,8 @@ public class SplitFrame extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
 
                 tasksManagementPanel.startTasks(tasksQueue);
+                tasksQueue.clear();
+                queueTablePanel.updateTableModel();
             }
         };
         tasksManagementPanel = new TasksManagementPanel(startTasksListener);

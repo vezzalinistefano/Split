@@ -10,15 +10,16 @@ import java.awt.event.ActionListener;
  */
 public class AddMergeTaskRow extends Row {
 
-    private JButton addJobBtn;
+    private JButton addTaskBtn;
 
     //TODO: action listener sul bottone
     public AddMergeTaskRow(ActionListener addTaskClick) {
         super();
 
-        addJobBtn = new JButton("Aggiungi alla coda");
+        addTaskBtn = new JButton("Aggiungi alla coda");
+        addTaskBtn.addActionListener(addTaskClick);
 
         this.add(Box.createRigidArea(new Dimension(5,0)));
-        this.add(addJobBtn);
+        this.add(addTaskBtn);
     }
 }

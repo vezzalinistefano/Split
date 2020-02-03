@@ -16,7 +16,7 @@ public class QueueTableModel extends AbstractTableModel {
         this.tasks = tasks;
     }
 
-    public void update(ArrayList<Task> tasksQueue){
+    public void update(){
         this.fireTableDataChanged();
     }
 

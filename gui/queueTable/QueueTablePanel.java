@@ -18,8 +18,8 @@ public class QueueTablePanel extends JPanel {
         this.add(scrollPane);
     }
 
-    public void updateTableModel(ArrayList<Task> tasksQueue) {
-        queueTableModel.update(tasksQueue);
+    public void updateTableModel() {
+        queueTableModel.update();
     }
 
 }

@@ -4,7 +4,9 @@ import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import java.io.*;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
 import java.util.zip.ZipEntry;
@@ -80,12 +82,51 @@ public class DivideTask extends Task {
                         compressFile(newFile.getPath());
                         newFile.delete();
                     }
-                    if(this.crypt) {
-                        super.encryptFile(newFile, Cipher.ENCRYPT_MODE, this.keyword);
+                    if (this.crypt) {
+                        encryptFile();
                         newFile.delete();
                     }
                 }
             }
+        }
+    }
+
+    private void encryptFile() {
+        try {
+            String cryptFileName = new String();
+            cryptFileName = file.getPath() + ".crypt";
+
+
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(keyword.toCharArray());
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory
+                    .getInstance("PBEWithMD5AndTripleDES");
+            SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);
+
+            byte[] salt = new byte[8];
+            Random random = new Random();
+            random.nextBytes(salt);
+
+            PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
+            Cipher cipher = Cipher.getInstance("PBEWithMD5AndTripleDES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, pbeParameterSpec);
+
+            FileInputStream inputStream = new FileInputStream(file);
+            byte[] inputBytes = new byte[(int) file.length()];
+            inputStream.read(inputBytes);
+
+            byte[] cryptBuffer = cipher.doFinal(inputBytes);
+
+            FileOutputStream fos = new FileOutputStream(cryptFileName);
+            fos.write(cryptBuffer, 0, cryptBuffer.length);
+
+            inputStream.close();
+            fos.close();
+
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
+                | IOException | BadPaddingException | InvalidKeySpecException
+                | InvalidAlgorithmParameterException e) {
+            //TODO future log
+            System.err.println(e.getMessage());
         }
     }
 
