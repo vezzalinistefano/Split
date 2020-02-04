@@ -88,48 +88,54 @@ public class MergeTask extends Task {
         return (f.getName().contains(".crypt"));
     }
 
-    private File decryptFile(File file) {
+    private File decryptFile(File f) {
+        String newFileName;
+        newFileName = f.getPath();
+        newFileName = newFileName.replace(".crypt", "");
         try {
-            String newFileName;
-            newFileName = file.getPath();
-            newFileName = newFileName.replace(".crypt", "");
-
-
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(keyword.toCharArray());
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(this.keyword.toCharArray());
             SecretKeyFactory secretKeyFactory = SecretKeyFactory
                     .getInstance("PBEWithMD5AndTripleDES");
             SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
-            FileInputStream inputStream = new FileInputStream(file);
+            FileInputStream fis = new FileInputStream(f);
             byte[] salt = new byte[8];
-            inputStream.read(salt);
+            fis.read(salt);
 
             PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
 
             Cipher cipher = Cipher.getInstance("PBEWithMD5AndTripleDES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, pbeParameterSpec);
-
             FileOutputStream fos = new FileOutputStream(newFileName);
+            byte[] in = new byte[64];
+            int read;
+            while ((read = fis.read(in)) != -1) {
+                byte[] output = cipher.update(in, 0, read);
+                if (output != null)
+                    fos.write(output);
+            }
 
             byte[] output = cipher.doFinal();
-            fos.write(output, 0, output.length);
+            if (output != null)
+                fos.write(output);
 
-            inputStream.close();
+            fis.close();
+            fos.flush();
             fos.close();
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException ex) {
 
-            file = new File(newFileName);
-
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | IOException | InvalidKeySpecException
-                | InvalidAlgorithmParameterException e) {
-            //TODO future log
-            System.err.println(e.getMessage());
-        } catch (BadPaddingException e) {
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
         }
-        return file;
+
+        File newFile = new File(newFileName);
+        return newFile;
     }
 
     private File unzipFile(File f) {

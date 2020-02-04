@@ -3,9 +3,11 @@ package logic;
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
@@ -36,7 +38,7 @@ public class DivideTask extends Task {
         this.keyword = keyword;
 
         if (this.parts != -1) {
-            this.sizeOfFiles = (int)Math.ceil((double)file.length() / parts);
+            this.sizeOfFiles = (int) Math.ceil((double) file.length() / parts);
         } else {
             this.sizeOfFiles = sizeOfFiles * 1024 * 1024;
         }
@@ -79,7 +81,7 @@ public class DivideTask extends Task {
                         newFile.delete();
                     }
                     if (this.crypt) {
-                        encryptFile(newFile.getPath());
+                        encryptFile(newFile);
                         newFile.delete();
                     }
                 }
@@ -87,14 +89,14 @@ public class DivideTask extends Task {
         }
     }
 
-    private void encryptFile(String path) {
+    private void encryptFile(File f) {
+        String cryptFileName = f.getPath() + ".crypt";
         try {
-            String cryptFileName = path + ".crypt";
+            FileInputStream inFile = new FileInputStream(f);
+            FileOutputStream outFile = new FileOutputStream(cryptFileName);
 
-
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(keyword.toCharArray());
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory
-                    .getInstance("PBEWithMD5AndTripleDES");
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(this.keyword.toCharArray());
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndTripleDES");
             SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
             byte[] salt = new byte[8];
@@ -104,24 +106,36 @@ public class DivideTask extends Task {
             PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
             Cipher cipher = Cipher.getInstance("PBEWithMD5AndTripleDES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, pbeParameterSpec);
+            outFile.write(salt);
 
-            FileInputStream inputStream = new FileInputStream(file);
-            byte[] inputBytes = new byte[(int) file.length()];
-            inputStream.read(inputBytes);
+            byte[] input = new byte[64];
+            int bytesRead;
+            while ((bytesRead = inFile.read(input)) != -1) {
+                byte[] output = cipher.update(input, 0, bytesRead);
+                if (output != null)
+                    outFile.write(output);
+            }
 
-            byte[] cryptBuffer = cipher.doFinal(inputBytes);
+            byte[] output = cipher.doFinal();
+            if (output != null)
+                outFile.write(output);
 
-            FileOutputStream fos = new FileOutputStream(cryptFileName);
-            fos.write(cryptBuffer, 0, cryptBuffer.length);
+            inFile.close();
+            outFile.flush();
+            outFile.close();
 
-            inputStream.close();
-            fos.close();
+        } catch (FileNotFoundException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException ex) {
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
-                | IOException | BadPaddingException | InvalidKeySpecException
-                | InvalidAlgorithmParameterException e) {
-            //TODO future log
-            System.err.println(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
         }
     }
 
