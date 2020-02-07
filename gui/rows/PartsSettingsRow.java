@@ -20,8 +20,16 @@ public class PartsSettingsRow extends Row implements ItemListener {
     private JRadioButton bySizeCheckBox;
     private JRadioButton byPartsCheckBox;
 
-    public PartsSettingsRow() {
+    private CompressRow compressRow;
+    private CryptRow cryptRow;
+    private DefaultRow defaultRow;
+
+    public PartsSettingsRow(CompressRow compressRow, CryptRow cryptRow, DefaultRow defaultRow) {
         super();
+
+        this.cryptRow = cryptRow;
+        this.compressRow = compressRow;
+        this.defaultRow = defaultRow;
 
         txtPartSize = new CustomJTextField(80, 24);
 
@@ -101,9 +109,15 @@ public class PartsSettingsRow extends Row implements ItemListener {
         if (byPartsCheckBox.isSelected()) {
             txtPartSize.setEnabled(false);
             spnrPartsNumber.setEnabled(true);
+            cryptRow.setStatus(false);
+            compressRow.getCompressCheckBox().setEnabled(false);
+            defaultRow.getDefaultChkBox().setEnabled(false);
         } else if (bySizeCheckBox.isSelected()) {
             txtPartSize.setEnabled(true);
             spnrPartsNumber.setEnabled(false);
+            cryptRow.setStatus(true);
+            compressRow.getCompressCheckBox().setEnabled(true);
+            defaultRow.getDefaultChkBox().setEnabled(true);
         }
     }
 }

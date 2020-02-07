@@ -8,12 +8,15 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 
 public class MergeTask extends Task {
-    private File[] files;
+    private File firstFile;
+
+    private ArrayList<File> files;
 
     private String keyword;
 
@@ -21,28 +24,57 @@ public class MergeTask extends Task {
 
     private String mergedFilePath;
 
-    public MergeTask(File[] files, String keyword) {
+    private boolean zipped = false;
+
+    private boolean encrypted = false;
+
+    public MergeTask(File f, String keyword) {
         super();
 
-        this.files = files;
+        this.files = new ArrayList<>();
+        this.firstFile = f;
         this.keyword = keyword;
 
-        File f = files[0];
-        String fileName = f.getName();
+        String fileName = firstFile.getName();
+
+        this.files.add(f);
 
         if (isZipped(f)) {
             fileName = fileName.replace(".zip", "");
+            this.zipped = true;
         }
         if (isEncrypted(f)) {
             fileName = fileName.replace(".crypt", "");
+            this.encrypted = true;
         }
 
-        Pattern pattern = Pattern.compile("(?![0-9])(?!-).*$");
+        Pattern pattern = Pattern.compile("(.*)\\.(.*)$");
         Matcher matcher = pattern.matcher(fileName);
+        int partIdx = 0;
         if (matcher.find()) {
-            this.mergedFilePath = f.getParent() + File.separator + matcher.group(0);
-            this.mergedFileName = matcher.group(0);
+            // Costruzione del nome e del percorso del nuovo file
+            this.mergedFilePath = f.getParent() + File.separator + matcher.group(1);
+            this.mergedFileName = matcher.group(1);
+            partIdx = Integer.parseInt(matcher.group(2)) + 1;
         }
+
+        // Ricerca di tutte le parti del file
+        // I nomi delle altre parti di file vengono costruiti supponendo che se la prima parte è zippata lo siano anche
+        // tutte le altre etc.
+        boolean keepSearching = true;
+
+        while (keepSearching) {
+            String filesPath = "" + this.mergedFilePath + "." + partIdx++;
+
+            if (this.zipped) filesPath += ".zip";
+            if (this.encrypted) filesPath += ".crypt";
+
+            File tmp = new File(filesPath);
+            keepSearching = tmp.exists();
+
+            if (keepSearching) this.files.add(tmp);
+        }
+
     }
 
     public String getFileName() {
@@ -67,10 +99,13 @@ public class MergeTask extends Task {
 
             buffer = new byte[(int) f.length()];
 
+
             fis.read(buffer);
 
             baos.write(buffer);
             fis.close();
+
+            f.delete();
         }
 
         FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
@@ -135,6 +170,7 @@ public class MergeTask extends Task {
         }
 
         File newFile = new File(newFileName);
+        f.delete();
         return newFile;
     }
 
@@ -145,7 +181,7 @@ public class MergeTask extends Task {
         try {
             fis = new FileInputStream(f);
             ZipInputStream zis = new ZipInputStream(fis);
-
+            zis.getNextEntry();
             FileOutputStream fos = new FileOutputStream(newFileName);
             int len;
             while ((len = zis.read(buffer)) > 0) {
@@ -159,7 +195,8 @@ public class MergeTask extends Task {
             ex.printStackTrace();
         }
 
-        f = new File(newFileName);
-        return f;
+        File newFile = new File(newFileName);
+        f.delete();
+        return newFile;
     }
 }

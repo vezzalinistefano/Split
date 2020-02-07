@@ -39,6 +39,8 @@ public class DivideSettingPanel extends DivideAndMergePanel {
      * se comprimere o meno i/il file
      */
     private CompressRow compressRow;
+
+    private DefaultRow defaultRow;
     /**
      * Pannello contenente il bottone che aggiunge il bottone alla coda dei job da eseguire
      */
@@ -46,24 +48,30 @@ public class DivideSettingPanel extends DivideAndMergePanel {
 
     private QueueTablePanel tablePanel;
 
+    private ButtonGroup group;
     /**
      * Aggiunge i vari componenti al pannello
      */
     public DivideSettingPanel(ActionListener divideListener, QueueTablePanel tablePanel) {
         super(SplitFrame.DIVIDE_PANEL);
 
-        chooseFileRow = new ChooseFileRow();
-        partsSettingsRow = new PartsSettingsRow();
-        cryptRow = new CryptRow();
-        compressRow = new CompressRow();
-        addTaskRow = new AddDivideTaskRow(divideListener);
+        this.chooseFileRow = new ChooseFileRow();
+        this.cryptRow = new CryptRow();
+        this.compressRow = new CompressRow();
+        this.defaultRow = new DefaultRow();
+        this.partsSettingsRow = new PartsSettingsRow(compressRow, cryptRow, defaultRow);
+        this.addTaskRow = new AddDivideTaskRow(divideListener);
         this.tablePanel = tablePanel;
+
 
         this.add(Box.createVerticalStrut(8));
         this.add(chooseFileRow);
 
         this.add(Box.createVerticalStrut(8));
         this.add(partsSettingsRow);
+
+        this.add(Box.createVerticalStrut(8));
+        this.add(defaultRow);
 
         this.add(Box.createVerticalStrut(8));
         this.add(cryptRow);
@@ -73,6 +81,13 @@ public class DivideSettingPanel extends DivideAndMergePanel {
 
         this.add(Box.createVerticalStrut(8));
         this.add(addTaskRow);
+
+        this.add(Box.createVerticalStrut(8));
+
+        group = new ButtonGroup();
+        group.add(defaultRow.getDefaultChkBox());
+        group.add(cryptRow.getCryptCheckBox());
+        group.add(compressRow.getCompressCheckBox());
     }
 
     public void AddDivideTask(ArrayList<Task> tasksQueue) {

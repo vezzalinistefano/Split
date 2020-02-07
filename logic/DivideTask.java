@@ -3,11 +3,9 @@ package logic;
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
@@ -70,7 +68,7 @@ public class DivideTask extends Task {
              BufferedInputStream bis = new BufferedInputStream(fis)) {
             int bytesAmount = 0;
             while ((bytesAmount = bis.read(buffer)) > 0) {
-                String filePartName = String.format("%03d-%s", partIdx++, fileName);
+                String filePartName = String.format("%s.%d", fileName, partIdx++);
 
                 File newFile = new File(file.getParent(), filePartName);
                 try (FileOutputStream out = new FileOutputStream(newFile)) {

@@ -2,6 +2,8 @@ package gui.rows;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Classe che implementa il pannello riga che permette all'utente di decidere
@@ -10,6 +12,10 @@ import java.awt.*;
 public class CompressRow extends Row {
 
     private JCheckBox compressCheckBox;
+
+    public JCheckBox getCompressCheckBox() {
+        return compressCheckBox;
+    }
 
     public CompressRow() {
         super();
@@ -24,4 +30,5 @@ public class CompressRow extends Row {
     public Boolean getCompressSelection() {
         return compressCheckBox.isSelected();
     }
+
 }
