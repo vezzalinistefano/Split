@@ -7,7 +7,6 @@ import logic.Task;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class TasksManagementPanel extends JPanel {
@@ -25,22 +24,10 @@ public class TasksManagementPanel extends JPanel {
     }
 
     public void startTasks(ArrayList<Task> tasks) {
+        Thread thread;
         for (Task t : tasks) {
-            if (t instanceof DivideTask) {
-                try {
-                    ((DivideTask) t).performTask();
-                } catch (IOException e) {
-                    //TODO: gestione eccezione file split
-                    System.out.println(e.getMessage());
-                }
-            } else if (t instanceof MergeTask) {
-                try {
-                    ((MergeTask) t).performTask();
-                } catch (IOException e) {
-                    //TODO: gestione eccezione file split
-                    System.out.println(e.getMessage());
-                }
-            }
+            thread = new Thread(t);
+            thread.start();
         }
     }
 }

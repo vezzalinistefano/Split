@@ -21,7 +21,7 @@ public class ChooseFileRow extends Row {
 
         fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(true);
-        fileChooser.setCurrentDirectory(new File("C:\\Users\\Stefano\\Music\\MusicBee\\Music"));
+        fileChooser.setCurrentDirectory(new File("C:\\Users\\Stefano\\Documents\\TestAPP"));
 
         fileBtn = new JButton("Scegli file");
         fileBtn.addActionListener(e -> {

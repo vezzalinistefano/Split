@@ -85,34 +85,40 @@ public class MergeTask extends Task {
         return this.keyword;
     }
 
-    public void performTask() throws IOException {
+    @Override
+    public void run() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer;
-        for (File f : this.files) {
-            if (isEncrypted(f)) {
-                f = decryptFile(f);
+        try {
+            for (File f : this.files) {
+                if (isEncrypted(f)) {
+                    f = decryptFile(f);
+                }
+                if (isZipped(f)) {
+                    f = unzipFile(f);
+                }
+
+                FileInputStream fis = new FileInputStream(f);
+
+                buffer = new byte[(int) f.length()];
+
+                fis.read(buffer);
+
+                baos.write(buffer);
+                fis.close();
+
+                f.delete();
+
             }
-            if (isZipped(f)) {
-                f = unzipFile(f);
-            }
-            FileInputStream fis = new FileInputStream(f);
 
-            buffer = new byte[(int) f.length()];
-
-
-            fis.read(buffer);
-
-            baos.write(buffer);
-            fis.close();
-
-            f.delete();
+            FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
+            byte[] totBuffer = baos.toByteArray();
+            baos.close();
+            fos.write(totBuffer, 0, totBuffer.length);
+            fos.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-
-        FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
-        byte[] totBuffer = baos.toByteArray();
-        baos.close();
-        fos.write(totBuffer, 0, totBuffer.length);
-        fos.close();
     }
 
     private boolean isZipped(File f) {
@@ -159,13 +165,8 @@ public class MergeTask extends Task {
             fos.close();
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException ex) {
 
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
+        } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException
+                 | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
 

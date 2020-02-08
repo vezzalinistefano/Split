@@ -58,32 +58,36 @@ public class DivideTask extends Task {
         return keyword;
     }
 
-    public void performTask() throws IOException {
+    public void run() {
         String fileName = file.getName();
         byte[] buffer = new byte[sizeOfFiles];
 
         int partIdx = 1;
 
-        try (FileInputStream fis = new FileInputStream(file);
-             BufferedInputStream bis = new BufferedInputStream(fis)) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            BufferedInputStream bis = new BufferedInputStream(fis);
             int bytesAmount = 0;
             while ((bytesAmount = bis.read(buffer)) > 0) {
                 String filePartName = String.format("%s.%d", fileName, partIdx++);
 
                 File newFile = new File(file.getParent(), filePartName);
-                try (FileOutputStream out = new FileOutputStream(newFile)) {
-                    out.write(buffer, 0, bytesAmount);
-                    out.close();
-                    if (this.compress) {
-                        compressFile(newFile.getPath());
-                        newFile.delete();
-                    }
-                    if (this.crypt) {
-                        encryptFile(newFile);
-                        newFile.delete();
-                    }
+
+                FileOutputStream out = new FileOutputStream(newFile);
+                out.write(buffer, 0, bytesAmount);
+                out.close();
+                if (this.compress) {
+                    compressFile(newFile.getPath());
+                    newFile.delete();
+                }
+                if (this.crypt) {
+                    encryptFile(newFile);
+                    newFile.delete();
                 }
             }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
