@@ -1,8 +1,7 @@
 package gui.panels;
 
+import gui.SplitFrame;
 import gui.rows.TasksManagementRow;
-import logic.DivideTask;
-import logic.MergeTask;
 import logic.Task;
 
 import javax.swing.*;
@@ -20,14 +19,20 @@ public class TasksManagementPanel extends JPanel {
 
         this.add(Box.createVerticalStrut(20));
         this.add(tasksManagementRow);
-        this.add(Box.createVerticalStrut(20));
     }
 
     public void startTasks(ArrayList<Task> tasks) {
-        Thread thread;
+        SplitFrame.performed = true;
+        ArrayList<Thread> thread = new ArrayList<>();
+
+        // Inizializzo ogni thread
         for (Task t : tasks) {
-            thread = new Thread(t);
-            thread.start();
+            thread.add(new Thread(t));
+        }
+
+        // Faccio partire ogni thread
+        for (Thread t:thread) {
+            t.start();
         }
     }
 }

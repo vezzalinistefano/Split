@@ -43,8 +43,12 @@ public class MergeSettingPanel extends DivideAndMergePanel {
     }
 
     public void AddMergeTask(ArrayList<Task> tasksQueue) {
+        if(SplitFrame.performed == true) {
+            tasksQueue.clear();
+            SplitFrame.performed = false;
+        }
         for(File f:chooseFileRow.getFilesSelected()) {
-            MergeTask mergeTask = new MergeTask(f, this.keywordRow.getKeyword());
+            MergeTask mergeTask = new MergeTask(f, this.keywordRow.getKeyword(), tablePanel);
 
             tasksQueue.add(mergeTask);
         }

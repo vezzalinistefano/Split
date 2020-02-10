@@ -1,8 +1,11 @@
 package logic;
 
+import gui.queueTable.QueueTablePanel;
+
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import javax.swing.*;
 import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -28,8 +31,8 @@ public class MergeTask extends Task {
 
     private boolean encrypted = false;
 
-    public MergeTask(File f, String keyword) {
-        super();
+    public MergeTask(File f, String keyword, QueueTablePanel tablePanel) {
+        super(tablePanel);
 
         this.files = new ArrayList<>();
         this.firstFile = f;

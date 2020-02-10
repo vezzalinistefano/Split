@@ -9,7 +9,7 @@ public class Main {
     public static void main(String args[]) {
         SplitFrame sf = new SplitFrame();
 
-        sf.setBounds(500, 600, 500, 600);
+        sf.setBounds(500, 200, 700, 600);
         sf.setVisible(true);
     }
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class QueueTableModel extends AbstractTableModel {
 
-    private ArrayList<Task> tasks = null;
+    private ArrayList<Task> tasks;
     private String[] colName = {"Modalità", "File", "Comprimi", "Cripta", "Parola chiave", "Avanzamento"};
 
     public QueueTableModel(ArrayList<Task> tasks) {
@@ -54,7 +54,7 @@ public class QueueTableModel extends AbstractTableModel {
                     case 4:
                         return "" + ((DivideTask) t).getKeyword();
                     case 5:
-                        return "";//TODO progress bar
+                        return "" + t.getProgress() + "%";
                     default:
                         return "";
                 }
@@ -66,6 +66,8 @@ public class QueueTableModel extends AbstractTableModel {
                         return ((MergeTask) t).getFileName();
                     case 4:
                         return "" + ((MergeTask) t).getKeyword();
+                    case 5:
+                        return "" + t.getProgress() + "%";
                     default:
                         return "";
                 }

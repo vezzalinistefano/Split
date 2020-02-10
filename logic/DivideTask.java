@@ -1,5 +1,7 @@
 package logic;
 
+import gui.queueTable.QueueTablePanel;
+
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
@@ -28,7 +30,9 @@ public class DivideTask extends Task {
 
     private String keyword;
 
-    public DivideTask(File file, int parts, int sizeOfFiles, boolean crypt, boolean compress, String keyword) {
+    public DivideTask(File file, int parts, int sizeOfFiles, boolean crypt, boolean compress, String keyword,
+                      QueueTablePanel tablePanel) {
+        super(tablePanel);
         this.file = file;
         this.parts = parts;
         this.crypt = crypt;
@@ -67,6 +71,9 @@ public class DivideTask extends Task {
         try {
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream bis = new BufferedInputStream(fis);
+
+            float progress;
+
             int bytesAmount = 0;
             while ((bytesAmount = bis.read(buffer)) > 0) {
                 String filePartName = String.format("%s.%d", fileName, partIdx++);
@@ -84,6 +91,9 @@ public class DivideTask extends Task {
                     encryptFile(newFile);
                     newFile.delete();
                 }
+
+                progress = 100 / ((float)file.length() / bytesAmount);
+                super.setProgressValue(progress);
             }
 
         } catch (IOException ex) {

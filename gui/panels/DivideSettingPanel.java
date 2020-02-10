@@ -91,11 +91,15 @@ public class DivideSettingPanel extends DivideAndMergePanel {
     }
 
     public void AddDivideTask(ArrayList<Task> tasksQueue) {
+        if(SplitFrame.performed == true) {
+            tasksQueue.clear();
+            SplitFrame.performed = false;
+        }
         for(File f : chooseFileRow.getFilesSelected()) {
             DivideTask divideTask = null;
 
             divideTask = new DivideTask(f, partsSettingsRow.getParts(), partsSettingsRow.getFileSize(),
-                    cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword());
+                    cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword(), tablePanel);
             tasksQueue.add(divideTask);
         }
         tablePanel.updateTableModel();
