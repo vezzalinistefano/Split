@@ -20,7 +20,6 @@ public abstract class DivideAndMergePanel extends JPanel {
     public DivideAndMergePanel(String title) {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        //this.setBorderTitle(title);
     }
 
     /**

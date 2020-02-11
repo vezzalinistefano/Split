@@ -5,6 +5,7 @@ import gui.customComponents.CustomJTextField;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -30,12 +31,12 @@ public class ChooseFileRow extends Row {
         });
 
 
-        txtFileSelected = new CustomJTextField(200,24);
+        txtFileSelected = new CustomJTextField(200, 24);
         txtFileSelected.setEditable(false);
 
-        this.add(Box.createRigidArea(new Dimension(5,0)));
+        this.add(Box.createRigidArea(new Dimension(5, 0)));
         this.add(fileBtn);
-        this.add(Box.createRigidArea(new Dimension(5,0)));
+        this.add(Box.createRigidArea(new Dimension(5, 0)));
         this.add(txtFileSelected);
     }
 
@@ -48,11 +49,26 @@ public class ChooseFileRow extends Row {
     }
 
     public void cleanSelectedFiles() {
-        fileChooser.setSelectedFile(null);
+        fileChooser.setSelectedFiles(null);
         txtFileSelected.setText("");
     }
 
     public File[] getFilesSelected() {
         return fileChooser.getSelectedFiles();
+    }
+
+    public void updateFileSelected(String fileName) {
+        File f = new File(fileName);
+        File owner = f.getParentFile();
+        if (owner.exists()) {
+            this.fileChooser.setCurrentDirectory(owner);
+        }
+        if (f.exists()) {
+            File[] files = new File[1];
+            files[0] = f;
+            this.fileChooser.setSelectedFiles(files);
+        }
+
+        this.txtFileSelected.setText(f.getName());
     }
 }

@@ -106,4 +106,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
         chooseFileRow.cleanSelectedFiles();
     }
 
+    public void setFileTextBox(String s) {
+        chooseFileRow.updateFileSelected(s);
+    }
 }

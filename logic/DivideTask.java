@@ -30,6 +30,14 @@ public class DivideTask extends Task {
 
     private String keyword;
 
+    public int getParts() {
+        return parts > 0 ? (int)this.parts : 1;
+    }
+
+    public int getSizeOfFiles() {
+        return sizeOfFiles;
+    }
+
     public DivideTask(File file, int parts, int sizeOfFiles, boolean crypt, boolean compress, String keyword,
                       QueueTablePanel tablePanel) {
         super(tablePanel);
@@ -43,11 +51,12 @@ public class DivideTask extends Task {
             this.sizeOfFiles = (int) Math.ceil((double) file.length() / parts);
         } else {
             this.sizeOfFiles = sizeOfFiles * 1024 * 1024;
+            this.parts = Math.ceil(file.length() / (double)this.sizeOfFiles);
         }
     }
 
-    public String getFileName() {
-        return file.getName();
+    public File getFile() {
+        return this.file;
     }
 
     public String isCrypt() {
@@ -94,6 +103,10 @@ public class DivideTask extends Task {
 
                 progress = 100 / ((float)file.length() / bytesAmount);
                 super.setProgressValue(progress);
+            }
+
+            if(super.getProgress() < 100) {
+                super.setProgressValue(100 - super.getProgress());
             }
 
         } catch (IOException ex) {

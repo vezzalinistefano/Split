@@ -90,6 +90,7 @@ public class MergeTask extends Task {
 
     @Override
     public void run() {
+        //TODO avanzamento progreso anche per merge
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer;
         try {

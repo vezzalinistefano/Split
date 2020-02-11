@@ -36,7 +36,18 @@ public class SplitFrame extends JFrame {
         ActionListener startTasksListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                tasksManagementPanel.startTasks(tasksQueue);
+                String whichClicked = actionEvent.getActionCommand();
+                if(whichClicked.equals(tasksManagementPanel.getStartName()))
+                    tasksManagementPanel.startTasks(tasksQueue);
+                else if(whichClicked.equals(tasksManagementPanel.getModifyName())) {
+                    tasksManagementPanel.modifyElement(tasksQueue, queueTablePanel.getSelectedRow(),
+                            divideSettingPanel);
+                    queueTablePanel.updateTableModel();
+                }
+                else if(whichClicked.equals(tasksManagementPanel.getDeleteName())) {
+                    tasksManagementPanel.deleteElement(tasksQueue, queueTablePanel.getSelectedRow());
+                    queueTablePanel.updateTableModel();
+                }
             }
         };
         tasksManagementPanel = new TasksManagementPanel(startTasksListener);

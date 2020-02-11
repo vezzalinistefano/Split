@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class QueueTableModel extends AbstractTableModel {
 
     private ArrayList<Task> tasks;
-    private String[] colName = {"Modalità", "File", "Comprimi", "Cripta", "Parola chiave", "Avanzamento"};
+    private String[] colName = {"Modalità", "File", "Parti", "Dimensioni", "Comprimi", "Cripta", "Parola chiave", "Avanzamento"};
 
     public QueueTableModel(ArrayList<Task> tasks) {
         this.tasks = tasks;
@@ -46,14 +46,18 @@ public class QueueTableModel extends AbstractTableModel {
                     case 0:
                         return "Divisione";
                     case 1:
-                        return ((DivideTask) t).getFileName();
+                        return ((DivideTask) t).getFile().getName();
                     case 2:
-                        return ((DivideTask) t).isCompress();
+                        return ((DivideTask) t).getParts();
                     case 3:
-                        return ((DivideTask) t).isCrypt();
+                        return ((DivideTask) t).getSizeOfFiles() + " B";
                     case 4:
-                        return "" + ((DivideTask) t).getKeyword();
+                        return ((DivideTask) t).isCompress();
                     case 5:
+                        return ((DivideTask) t).isCrypt();
+                    case 6:
+                        return "" + ((DivideTask) t).getKeyword();
+                    case 7:
                         return "" + t.getProgress() + "%";
                     default:
                         return "";

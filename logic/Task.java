@@ -7,7 +7,7 @@ import gui.queueTable.QueueTablePanel;
  * da mettere in coda
  */
 public abstract class Task implements Runnable{
-    private float progress;
+    private int progress;
     private QueueTablePanel tablePanel;
 
     public Task(QueueTablePanel tablePanel) {
@@ -15,7 +15,7 @@ public abstract class Task implements Runnable{
         this.tablePanel = tablePanel;
     }
 
-    public float getProgress() {
+    public int getProgress() {
         return progress;
     }
 

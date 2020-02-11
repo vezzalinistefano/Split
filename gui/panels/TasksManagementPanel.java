@@ -1,7 +1,9 @@
 package gui.panels;
 
 import gui.SplitFrame;
+import gui.queueTable.QueueTablePanel;
 import gui.rows.TasksManagementRow;
+import logic.DivideTask;
 import logic.Task;
 
 import javax.swing.*;
@@ -21,6 +23,18 @@ public class TasksManagementPanel extends JPanel {
         this.add(tasksManagementRow);
     }
 
+    public String getStartName() {
+        return tasksManagementRow.getStartBtn().getText();
+    }
+
+    public String getModifyName() {
+        return tasksManagementRow.getModifyBtn().getText();
+    }
+
+    public String getDeleteName() {
+        return tasksManagementRow.getDeleteBtn().getText();
+    }
+
     public void startTasks(ArrayList<Task> tasks) {
         SplitFrame.performed = true;
         ArrayList<Thread> thread = new ArrayList<>();
@@ -34,5 +48,18 @@ public class TasksManagementPanel extends JPanel {
         for (Thread t:thread) {
             t.start();
         }
+    }
+
+    public void modifyElement(ArrayList<Task> tasks, int index, DivideSettingPanel divideSettingPanel) {
+        Task t = tasks.get(index);
+        if(t instanceof DivideTask) {
+            this.deleteElement(tasks, index);
+            String fileName = ((DivideTask) t).getFile().getAbsolutePath();
+            divideSettingPanel.setFileTextBox(fileName);
+        }
+    }
+
+    public void deleteElement(ArrayList<Task> tasks, int index) {
+        tasks.remove(index);
     }
 }
