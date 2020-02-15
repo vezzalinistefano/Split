@@ -1,5 +1,6 @@
-package gui.queueTable;
+package gui.panels;
 
+import gui.queueTable.QueueTableModel;
 import logic.Task;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package gui;
 
 import gui.panels.*;
-import gui.queueTable.QueueTablePanel;
+import gui.panels.QueueTablePanel;
 import logic.Task;
 
 import javax.swing.*;

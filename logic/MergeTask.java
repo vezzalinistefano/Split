@@ -1,11 +1,10 @@
 package logic;
 
-import gui.queueTable.QueueTablePanel;
+import gui.panels.QueueTablePanel;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import javax.swing.*;
 import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -17,38 +16,33 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 
 public class MergeTask extends Task {
-    private File firstFile;
 
     private ArrayList<File> files;
-
-    private String keyword;
 
     private String mergedFileName;
 
     private String mergedFilePath;
 
-    private boolean zipped = false;
-
-    private boolean encrypted = false;
-
     public MergeTask(File f, String keyword, QueueTablePanel tablePanel) {
         super(tablePanel);
 
         this.files = new ArrayList<>();
-        this.firstFile = f;
+        this.file = f;
         this.keyword = keyword;
 
-        String fileName = firstFile.getName();
+        String fileName = file.getName();
 
         this.files.add(f);
 
+        boolean zipped = false;
         if (isZipped(f)) {
             fileName = fileName.replace(".zip", "");
-            this.zipped = true;
+            zipped = true;
         }
+        boolean encrypted = false;
         if (isEncrypted(f)) {
             fileName = fileName.replace(".crypt", "");
-            this.encrypted = true;
+            encrypted = true;
         }
 
         Pattern pattern = Pattern.compile("(.*)\\.(.*)$");
@@ -69,8 +63,8 @@ public class MergeTask extends Task {
         while (keepSearching) {
             String filesPath = "" + this.mergedFilePath + "." + partIdx++;
 
-            if (this.zipped) filesPath += ".zip";
-            if (this.encrypted) filesPath += ".crypt";
+            if (zipped) filesPath += ".zip";
+            if (encrypted) filesPath += ".crypt";
 
             File tmp = new File(filesPath);
             keepSearching = tmp.exists();
@@ -90,7 +84,7 @@ public class MergeTask extends Task {
 
     @Override
     public void run() {
-        //TODO avanzamento progreso anche per merge
+        int progress = 100 / this.files.size();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer;
         try {
@@ -113,6 +107,12 @@ public class MergeTask extends Task {
 
                 f.delete();
 
+                super.setProgressValue(progress);
+
+            }
+
+            if(super.getProgress() < 100) {
+                super.setProgressValue(100 - super.getProgress());
             }
 
             FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
@@ -203,5 +203,9 @@ public class MergeTask extends Task {
         File newFile = new File(newFileName);
         f.delete();
         return newFile;
+    }
+
+    public int getFilesLenght() {
+        return this.files.size();
     }
 }

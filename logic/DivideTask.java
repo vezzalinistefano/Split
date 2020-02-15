@@ -1,6 +1,6 @@
 package logic;
 
-import gui.queueTable.QueueTablePanel;
+import gui.panels.QueueTablePanel;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
@@ -15,29 +15,68 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Classe che estende {@link Task} implementando un task di divisione di un file
+ * Estende {@link Task} implementando un task di divisione di un file
  */
 public class DivideTask extends Task {
-    private File file;
 
+    /**
+     * Parti in cui verrà diviso il file
+     */
     private double parts;
 
+    /**
+     * La dimensione massima di ogni file scaturito dalla
+     * divisione
+     */
     private int sizeOfFiles;
 
+    /**
+     * Indica se i file verranno criptati oppure no
+     */
     private boolean crypt;
 
+    /**
+     * Indica se i file verranno compressi oppure no
+     */
     private boolean compress;
 
-    private String keyword;
 
+    /**
+     * Ritorna il numero di parti in cui il file verrà diviso
+     *
+     * @return il numero di parti in cui il file verrà diviso
+     */
     public int getParts() {
-        return parts > 0 ? (int)this.parts : 1;
+        return parts > 0 ? (int) this.parts : 1;
     }
 
+    /**
+     * Ritorna la dimensione massima dei file scaturiti dalla divisione
+     *
+     * @return dimensione massima dei file
+     */
     public int getSizeOfFiles() {
         return sizeOfFiles;
     }
 
+    /**
+     * Costruisce un DivideTask.
+     * <p>
+     * Nel caso in cui l'utente inserisca il numero di parti desiderate il metodo va a calcolare la dimensione massima
+     * che assumerà ogni parte (l'ultima parte potrebbe essere più piccola).
+     * <p>
+     * Nel caso in cui l'utente inserisca la dimensione dei file desiderata il metodo va a calcolare in quante parti
+     * verrà diviso il file.
+     *
+     * @param file        Il file scelto per essere diviso
+     * @param parts       In quante parti si desidera suddividere il file
+     * @param sizeOfFiles La dimensione dei file scaturiti dalla divisione desiderata
+     * @param crypt       I file andranno criptati o no
+     * @param compress    I file andranno compressi o no
+     * @param keyword     La password per la criptazione, nel caso non si voglia criptare il file questo campo risulterà
+     *                    vuoto
+     * @param tablePanel  Riferimento alla tabella che mostra i task in coda
+     */
     public DivideTask(File file, int parts, int sizeOfFiles, boolean crypt, boolean compress, String keyword,
                       QueueTablePanel tablePanel) {
         super(tablePanel);
@@ -51,26 +90,39 @@ public class DivideTask extends Task {
             this.sizeOfFiles = (int) Math.ceil((double) file.length() / parts);
         } else {
             this.sizeOfFiles = sizeOfFiles * 1024 * 1024;
-            this.parts = Math.ceil(file.length() / (double)this.sizeOfFiles);
+            this.parts = Math.ceil(file.length() / (double) this.sizeOfFiles);
         }
     }
 
-    public File getFile() {
-        return this.file;
-    }
-
+    /**
+     * Ritorna una stringa che rappresenta la scelta dell'utente nella criptazione
+     * del file
+     *
+     * @return "Si" o "No" in base al valore di {@link #crypt}
+     */
     public String isCrypt() {
         return (this.crypt ? "Si" : "No");
     }
 
+    /**
+     * Ritorna una stringa che rappresenta la scelta dell'utente nella compressione
+     * del file
+     *
+     * @return "Si" o "No" in base al valore di {@link #compress}
+     */
     public String isCompress() {
         return (this.compress ? "Si" : "No");
     }
 
-    public String getKeyword() {
-        return keyword;
-    }
-
+    /**
+     * Esegue il task di divisione.
+     * <p>
+     * Per prima cosa si estrae una parte di file di dimensione {@link #sizeOfFiles} e la si mette in un nuovo file,
+     * dopodichè in base al valore di {@link #crypt} e {@link #compress} questo nuovo file viene compresso nel metodo
+     * {@link #compressFile(String)} o criptato nel metodo {@link #encryptFile(File)}.
+     * <p>
+     * Per ogni file creato viene vatto avanzare il valore rappresentante il progresso del task.
+     */
     public void run() {
         String fileName = file.getName();
         byte[] buffer = new byte[sizeOfFiles];
@@ -101,11 +153,11 @@ public class DivideTask extends Task {
                     newFile.delete();
                 }
 
-                progress = 100 / ((float)file.length() / bytesAmount);
+                progress = 100 / ((float) file.length() / bytesAmount);
                 super.setProgressValue(progress);
             }
 
-            if(super.getProgress() < 100) {
+            if (super.getProgress() < 100) {
                 super.setProgressValue(100 - super.getProgress());
             }
 
@@ -114,6 +166,14 @@ public class DivideTask extends Task {
         }
     }
 
+    /**
+     * Cripta il file.
+     * <p>
+     * Per prima cosa viene creata un istanza di {@link Cipher}
+     *
+     * @param f File da criptare
+     */
+    //TODO documentazione
     private void encryptFile(File f) {
         String cryptFileName = f.getPath() + ".crypt";
         try {
@@ -149,7 +209,8 @@ public class DivideTask extends Task {
             outFile.flush();
             outFile.close();
 
-        } catch (FileNotFoundException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException ex) {
+        } catch (FileNotFoundException | NoSuchAlgorithmException
+                | InvalidKeySpecException | NoSuchPaddingException ex) {
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -164,6 +225,14 @@ public class DivideTask extends Task {
         }
     }
 
+    /**
+     * Comprime il file.
+     * <p>
+     * Il buffer del file scelto viene dato in basto ad un {@link ZipOutputStream} che va a scrivere su
+     * disco il file compresso.
+     *
+     * @param path Il percorso del file da comprimere
+     */
     private void compressFile(String path) {
         File f = new File(path);
         String zipFileName = String.format(path + ".zip");

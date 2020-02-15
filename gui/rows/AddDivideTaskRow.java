@@ -5,13 +5,19 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * Classe che implementa il pannello riga contenente il bottone che aggiunge
- * il Job alla coda
+ * {@link Row} che mostra il bottone per aggiungere un {@link logic.DivideTask} in coda
  */
 public class AddDivideTaskRow extends Row {
 
+    /**
+     * {@link JButton} che cattura il click sul bottone per aggiungere un {@link logic.DivideTask} in coda
+     */
     private JButton addJobBtn;
 
+    /**
+     * Compone l'AddDivideTaskRow
+     * @param onClick
+     */
     public AddDivideTaskRow(ActionListener onClick) {
         super();
 

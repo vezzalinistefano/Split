@@ -2,13 +2,9 @@ package gui.panels;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
-import java.io.File;
-import java.util.Vector;
 
 /**
- * Classe che estende JPanel e racchiude alcune impostazioni comuni
- * sia all'operazione di divisione che a quella di unione dei file
+ * {@link JPanel}
  */
 public abstract class DivideAndMergePanel extends JPanel {
 

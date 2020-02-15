@@ -1,56 +1,62 @@
 package gui.panels;
 
 import gui.SplitFrame;
-import gui.queueTable.QueueTableModel;
-import gui.queueTable.QueueTablePanel;
 import gui.rows.*;
 import logic.DivideTask;
 import logic.Task;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Vector;
+
 
 /**
- * Classe che implementa il pannello contenente i componenti per impostare
- * la divisione di uno o più file
+ * {@link DivideAndMergePanel} che da la possibilità di aggiungere un task di divisione
  */
 public class DivideSettingPanel extends DivideAndMergePanel {
 
     /**
-     * Pannello contenente i componenti per la scelta dei/del file
-     * */
+     * La {@link Row} che permette di scegliere i file da dividere
+     */
     private ChooseFileRow chooseFileRow;
+
     /**
-     * Pannello contenente i componenti per la scelta delle dimensioni
-     * delle parti in cui verrà diviso il file
+     * La {@link Row} che permette di impostare in quante parti dividere il file o le dimensioni delle singole parti
      */
     private PartsSettingsRow partsSettingsRow;
-    /** Pannello contenente i componenti che permettono all'utente di scegliere se
-     *  criptare o meno i/il file e di impostare una parola chiave
+
+    /**
+     * La {@link Row} che permette di scegliere se criptare tramite password i file generati dalla divisione
      */
     private CryptRow cryptRow;
+
     /**
-     * Pannello contenente i componenti che permettono all'utente di scegliere
-     * se comprimere o meno i/il file
+     * La {@link Row} che permette di scegliere se comprimere i file generati dalla divisione
      */
     private CompressRow compressRow;
 
-    private DefaultRow defaultRow;
     /**
-     * Pannello contenente il bottone che aggiunge il bottone alla coda dei job da eseguire
+     * La {@link Row} che permette di scegliere la modalità di default della divisione
+     */
+    private DefaultRow defaultRow;
+
+    /**
+     * La {@link Row} che perm
      */
     private AddDivideTaskRow addTaskRow;
 
+    /**
+     * Riferimento alla {@link QueueTablePanel} che permette di aggiornare la tabella
+     * all'aggiunta di un {@link DivideTask}
+     */
     private QueueTablePanel tablePanel;
 
-    private ButtonGroup group;
     /**
-     * Aggiunge i vari componenti al pannello
+     * Costruisce il DivideSettingPanel
+     *
+     * @param divideListener L'{@link ActionListener} collegato a {@link AddDivideTaskRow}
+     * @param tablePanel     Riferimento alla {@link JTable} che contiene la tabella dei {@link Task}
      */
     public DivideSettingPanel(ActionListener divideListener, QueueTablePanel tablePanel) {
         super(SplitFrame.DIVIDE_PANEL);
@@ -84,28 +90,42 @@ public class DivideSettingPanel extends DivideAndMergePanel {
 
         this.add(Box.createVerticalStrut(8));
 
-        group = new ButtonGroup();
+        ButtonGroup group = new ButtonGroup();
         group.add(defaultRow.getDefaultChkBox());
         group.add(cryptRow.getCryptCheckBox());
         group.add(compressRow.getCompressCheckBox());
     }
 
+    /**
+     * Crea un nuovo {@link DivideTask} per ogni file selezionato e lo aggiunge in coda, dopodichè
+     * aggiorna la tabella e pulisce la lista dei file selezionati in precedenza
+     * <p>
+     * Nel caso fosse già stato eseguita una serie di task pulisce la coda precedente
+     *
+     * @param tasksQueue la coda dei task da eseguire
+     */
     public void AddDivideTask(ArrayList<Task> tasksQueue) {
-        if(SplitFrame.performed == true) {
+        if (SplitFrame.performed) {
             tasksQueue.clear();
             SplitFrame.performed = false;
         }
-        for(File f : chooseFileRow.getFilesSelected()) {
-            DivideTask divideTask = null;
+        for (File f : chooseFileRow.getFilesSelected()) {
+            DivideTask divideTask = new DivideTask(f, partsSettingsRow.getParts(), partsSettingsRow.getFileSize(),
+                    cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword(),
+                    tablePanel);
 
-            divideTask = new DivideTask(f, partsSettingsRow.getParts(), partsSettingsRow.getFileSize(),
-                    cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword(), tablePanel);
             tasksQueue.add(divideTask);
         }
         tablePanel.updateTableModel();
         chooseFileRow.cleanSelectedFiles();
     }
 
+    /**
+     * Aggiorna la lista dei file selezionati all'interno della {@link JTextField} presente in
+     * {@link ChooseFileRow}
+     *
+     * @param s Il nome del file che andrà nel campo di testo
+     */
     public void setFileTextBox(String s) {
         chooseFileRow.updateFileSelected(s);
     }
