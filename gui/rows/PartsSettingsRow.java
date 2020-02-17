@@ -7,23 +7,48 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
+
 
 /**
- * Classe che implementa il pannello riga che permette all'utente di selezionare
+ * La {@link Row} che permette all'utente di selezionare
  * la dimensione delle parti e il numero di parti
  */
 public class PartsSettingsRow extends Row implements ItemListener {
+    /**
+     * Permette di inserire il numero di parti in cui dividere il
+     * file
+     */
     private JSpinner spnrPartsNumber;
+
+    /**
+     * Permette di inserire la dimensione di ogni file risultante dalla divisione
+     */
     private CustomJTextField txtPartSize;
 
+    /**
+     * permette di effettuare una divisione in base al numero di parti
+     */
     private JRadioButton bySizeCheckBox;
+
+    /**
+     * Permette di effettuare la divisione in base alla dimensione inserita
+     */
     private JRadioButton byPartsCheckBox;
 
     private CompressRow compressRow;
     private CryptRow cryptRow;
     private DefaultRow defaultRow;
 
+    /**
+     * Costruisce una nuova PartsSettingsRow
+     *
+     * @param compressRow Riferimento alla {@link CompressRow } che permette di usare una modalità
+     *                    di divisione alla volta
+     * @param cryptRow    Riferimento alla {@link CryptRow} che permette di usare una modalità di
+     *                    divisione alla volta
+     * @param defaultRow  Riferimento alla {@link DefaultRow } che permette di usare una modalità
+     *                    di divisione alla volta
+     */
     public PartsSettingsRow(CompressRow compressRow, CryptRow cryptRow, DefaultRow defaultRow) {
         super();
 
@@ -84,6 +109,11 @@ public class PartsSettingsRow extends Row implements ItemListener {
 
     }
 
+    /**
+     * Prende il valore inserito in {@link #spnrPartsNumber}
+     *
+     * @return Il numero di parti in cui si vuole dividere il file
+     */
     public int getParts() {
         if (byPartsCheckBox.isSelected())
             return (Integer) spnrPartsNumber.getValue();
@@ -91,6 +121,11 @@ public class PartsSettingsRow extends Row implements ItemListener {
             return -1;
     }
 
+    /**
+     * Prende il valore inserito in {@link #txtPartSize}
+     *
+     * @return La dimensione massima scelta di ogni file nato dalla divisione
+     */
     public int getFileSize() {
         if (bySizeCheckBox.isSelected()) {
             try {
@@ -104,6 +139,11 @@ public class PartsSettingsRow extends Row implements ItemListener {
             return -1;
     }
 
+    /**
+     * Rende operativa solo una delle tre modalità alla volta
+     *
+     * @param itemEvent Cattura la selezione di una nuova checkbox
+     */
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
         if (byPartsCheckBox.isSelected()) {

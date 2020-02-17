@@ -67,12 +67,10 @@ public class TasksManagementPanel extends JPanel {
         SplitFrame.performed = true;
         ArrayList<Thread> thread = new ArrayList<>();
 
-        // Inizializzo ogni thread
         for (Task t : tasks) {
             thread.add(new Thread(t));
         }
 
-        // Faccio partire ogni thread
         for (Thread t:thread) {
             t.start();
         }

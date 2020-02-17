@@ -2,21 +2,30 @@ package gui.rows;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 /**
- * Classe che implementa il pannello riga che permette all'utente di decidere
+ * La {@link Row} che permette all'utente di decidere
  * se comprimere o no i file generati dalla divisione
  */
 public class CompressRow extends Row {
 
+    /**
+     * Viene selezionata se si vuole comprimere i file generati dalla divisione
+     */
     private JCheckBox compressCheckBox;
 
+    /**
+     * Ritorna un riferimento alla check box per la scelta della compressione
+     * @return Un riferimento a {@link #compressCheckBox}
+     */
     public JCheckBox getCompressCheckBox() {
         return compressCheckBox;
     }
 
+    /**
+     * Costruisce una nuova CompressRow
+     */
     public CompressRow() {
         super();
 
@@ -27,6 +36,10 @@ public class CompressRow extends Row {
         this.add(compressCheckBox);
     }
 
+    /**
+     * Ritorna lo stato della {@link #compressCheckBox}
+     * @return Vero o falso in base allo stato della {@link #compressCheckBox}
+     */
     public Boolean getCompressSelection() {
         return compressCheckBox.isSelected();
     }

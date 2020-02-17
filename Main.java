@@ -1,11 +1,13 @@
 import gui.SplitFrame;
 
-import javax.swing.*;
-
 /**
- * Classe Main del programma
+ * Classe Main del programma.
  */
 public class Main {
+
+    /**
+     * Crea un nuovo {@link SplitFrame} e lo rende visibile
+     */
     public static void main(String args[]) {
         SplitFrame sf = new SplitFrame();
 

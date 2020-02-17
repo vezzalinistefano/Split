@@ -34,7 +34,8 @@ public abstract class Task implements Runnable {
      *
      * @param tablePanel riferimento alla tabella che mostra i task in coda
      */
-    public Task(QueueTablePanel tablePanel) {
+    public Task(QueueTablePanel tablePanel, File f) {
+        this.file = f;
         this.progress = 0;
         this.tablePanel = tablePanel;
     }

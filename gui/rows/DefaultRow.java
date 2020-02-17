@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Classe che estende {@link Row} e implementa il pannello contenente la {@link JCheckBox} che
+ * La {@link Row} che implementa il pannello contenente la {@link JCheckBox} che
  * permette all'utente se utilizzare o no la modalità di divisione di default
  */
 public class DefaultRow extends Row {
@@ -14,6 +14,10 @@ public class DefaultRow extends Row {
      */
     private JCheckBox defaultChkBox;
 
+    /**
+     * Ritorna un riferimento alla check box per la scelta della modalità di default per la divisione
+     * @return Un riferimento a {@link #defaultChkBox}
+     */
     public JCheckBox getDefaultChkBox() {
         return defaultChkBox;
     }

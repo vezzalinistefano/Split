@@ -42,7 +42,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
     private DefaultRow defaultRow;
 
     /**
-     * La {@link Row} che perm
+     * La {@link Row} che permette di aggiungere un nuovo {@link DivideTask} in coda
      */
     private AddDivideTaskRow addTaskRow;
 

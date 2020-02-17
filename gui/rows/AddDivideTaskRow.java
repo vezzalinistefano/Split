@@ -3,6 +3,7 @@ package gui.rows;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * {@link Row} che mostra il bottone per aggiungere un {@link logic.DivideTask} in coda
@@ -10,13 +11,13 @@ import java.awt.event.ActionListener;
 public class AddDivideTaskRow extends Row {
 
     /**
-     * {@link JButton} che cattura il click sul bottone per aggiungere un {@link logic.DivideTask} in coda
+     * Bottone che avvia {@link gui.panels.DivideSettingPanel#AddDivideTask(ArrayList)}
      */
     private JButton addJobBtn;
 
     /**
      * Compone l'AddDivideTaskRow
-     * @param onClick
+     * @param onClick {@link ActionListener} che cattura il click sul bottone
      */
     public AddDivideTaskRow(ActionListener onClick) {
         super();

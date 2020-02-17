@@ -15,7 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Estende {@link Task} implementando un task di divisione di un file
+ * Il {@link Task} che permette la divisione di un file
  */
 public class DivideTask extends Task {
 
@@ -60,7 +60,7 @@ public class DivideTask extends Task {
     }
 
     /**
-     * Costruisce un DivideTask.
+     * Inizializza un DivideTask.
      * <p>
      * Nel caso in cui l'utente inserisca il numero di parti desiderate il metodo va a calcolare la dimensione massima
      * che assumerà ogni parte (l'ultima parte potrebbe essere più piccola).
@@ -79,8 +79,7 @@ public class DivideTask extends Task {
      */
     public DivideTask(File file, int parts, int sizeOfFiles, boolean crypt, boolean compress, String keyword,
                       QueueTablePanel tablePanel) {
-        super(tablePanel);
-        this.file = file;
+        super(tablePanel, file);
         this.parts = parts;
         this.crypt = crypt;
         this.compress = compress;
@@ -169,11 +168,14 @@ public class DivideTask extends Task {
     /**
      * Cripta il file.
      * <p>
-     * Per prima cosa viene creata un istanza di {@link Cipher}
+     * Per prima cosa viene creata un istanza di {@link Cipher} settata per utilizzare l'algoritmo
+     * "PBEWithMD5AndTripleDES", dopodichè viene inizializzata per essere usata in modalità ENCRYPT e
+     * per usare la password scelta dotata di salt(per proteggersi dagli attacchi a dizionario).
+     * Il salt viene poi scritto sul file.
+     * Il cipher cripta man mano porzioni di 64 byte del file fino a quando non l'ha criptato tutto.
      *
      * @param f File da criptare
      */
-    //TODO documentazione
     private void encryptFile(File f) {
         String cryptFileName = f.getPath() + ".crypt";
         try {

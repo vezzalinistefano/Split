@@ -15,16 +15,36 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Il {@link Task} che permette l'unione di più file in un unico file
+ */
 public class MergeTask extends Task {
 
+    /**
+     * Contiene tutte le parti del file
+     */
     private ArrayList<File> files;
 
+    /**
+     * Il nome che avrà il file finale
+     */
     private String mergedFileName;
 
+    /**
+     * Il percorso del file finale
+     */
     private String mergedFilePath;
 
+    /**
+     * Inizializza un MergeTask andando anche a pescare a partire dal primo dato in input
+     * tutti i file che comporranno quello finale.
+     *
+     * @param f          Il primo file di tutti quelli che comporranno il file finale
+     * @param keyword    La password utilizzata per decriptare i file
+     * @param tablePanel Riferimento ad una {@link QueueTablePanel} utilizzato per l'aggiornamento della vista
+     */
     public MergeTask(File f, String keyword, QueueTablePanel tablePanel) {
-        super(tablePanel);
+        super(tablePanel, f);
 
         this.files = new ArrayList<>();
         this.file = f;
@@ -74,14 +94,18 @@ public class MergeTask extends Task {
 
     }
 
+    /**
+     * Ritorna il nome finale del file
+     *
+     * @return Il nome finale del file
+     */
     public String getFileName() {
         return this.mergedFileName;
     }
 
-    public String getKeyword() {
-        return this.keyword;
-    }
-
+    /**
+     * Ricompone il file
+     */
     @Override
     public void run() {
         int progress = 100 / this.files.size();
@@ -111,7 +135,7 @@ public class MergeTask extends Task {
 
             }
 
-            if(super.getProgress() < 100) {
+            if (super.getProgress() < 100) {
                 super.setProgressValue(100 - super.getProgress());
             }
 
@@ -125,14 +149,37 @@ public class MergeTask extends Task {
         }
     }
 
+    /**
+     * Controlla se il file è zippato o no.
+     *
+     * @param f Il file da controllare
+     * @return true se il file è zippato, false altrimenti
+     */
     private boolean isZipped(File f) {
         return (f.getName().contains(".zip"));
     }
 
+    /**
+     * Controlla se il file è criptato o no.
+     *
+     * @param f Il file da controllare
+     * @return true se il file è criptato, false altrimenti
+     */
     private boolean isEncrypted(File f) {
         return (f.getName().contains(".crypt"));
     }
 
+    /**
+     * Decripta il file e ritorna il file decriptato.
+     * <p>
+     * Viene letto il salt dal file e viene inizializzato un istanza di {@link Cipher} in modalità DECRYPT, dopodichè se
+     * la password è corretta il file viene decriptato a porzioni di 64 bit e viene creato un nuovo file copia di
+     * quello dato in input ma decriptato.
+     * Il file criptato viene eliminato.
+     *
+     * @param f Il file da decriptare
+     * @return
+     */
     private File decryptFile(File f) {
         String newFileName;
         newFileName = f.getPath();
@@ -170,7 +217,7 @@ public class MergeTask extends Task {
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException ex) {
 
         } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException
-                 | InvalidAlgorithmParameterException e) {
+                | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
 
@@ -179,6 +226,16 @@ public class MergeTask extends Task {
         return newFile;
     }
 
+    /**
+     * Decomprime il file.
+     * <p>
+     * Il buffer del file scelto viene dato in basto ad un {@link ZipInputStream} che va a scrivere su
+     * disco il file decompresso.
+     * Dopodichè elimina il vecchio file ancora compresso
+     *
+     * @param f Il file da decomprimere
+     * @return Il file decompresso
+     */
     private File unzipFile(File f) {
         String newFileName = f.getPath().replace(".zip", "");
         FileInputStream fis;
@@ -205,7 +262,11 @@ public class MergeTask extends Task {
         return newFile;
     }
 
-    public int getFilesLenght() {
+    /**
+     * Ritorna la lunghezza del file.
+     * @return La lunghezza del file.
+     */
+    public int getFilesLength() {
         return this.files.size();
     }
 }
