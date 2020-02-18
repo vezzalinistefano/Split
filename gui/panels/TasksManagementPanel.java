@@ -67,7 +67,7 @@ public class TasksManagementPanel extends JPanel {
      * Per ogni task in coda viene inizializzato un nuovo thread che a sua volta viene aggiunto ad una {@link ArrayList}
      * di thread, dopodichè ogni thread viene avviato.
      *
-     * @param tasks
+     * @param tasks La coda dei tasks da avviare
      */
     public void startTasks(ArrayList<Task> tasks) {
         SplitFrame.performed = true;

@@ -89,7 +89,7 @@ public class ChooseFileRow extends Row {
     /**
      * Aggiorna la {@link #txtFileSelected} e imposta {@link #fileChooser} su un file
      * a piacere
-     * @param fileName
+     * @param fileName Il nome del file da settare nel {@link #fileChooser}
      */
     public void updateFileSelected(String fileName) {
         File f = new File(fileName);

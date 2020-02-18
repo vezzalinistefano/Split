@@ -117,7 +117,7 @@ public class MergeTask extends Task {
                 if (isEncrypted(f)) {
                     try {
                         f = decryptFile(f);
-                    }catch (IOException ex) {
+                    } catch (IOException ex) {
                         ErrorPopupMessage.show("" + ex.getMessage(), "File non trovato");
                         continue;
                     }
@@ -153,11 +153,15 @@ public class MergeTask extends Task {
                 super.setProgressValue(100 - super.getProgress());
             }
 
-            FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
+
             byte[] totBuffer = baos.toByteArray();
             baos.close();
-            fos.write(totBuffer, 0, totBuffer.length);
-            fos.close();
+            if (totBuffer.length > 0) {
+                FileOutputStream fos = new FileOutputStream(this.mergedFilePath);
+
+                fos.write(totBuffer, 0, totBuffer.length);
+                fos.close();
+            }
         } catch (IOException ex) {
             ErrorPopupMessage.show("Il file " + file.getName() + " non è stato trovato", "");
         }
@@ -192,10 +196,11 @@ public class MergeTask extends Task {
      * quello dato in input ma decriptato.
      * Il file criptato viene eliminato.
      *
+     * @throws IOException Nel caso in cui il file da decriptare non venga trovato
      * @param f Il file da decriptare
-     * @return
+     * @return Il file decriptato
      */
-    private File decryptFile(File f) throws IOException{
+    private File decryptFile(File f) throws IOException {
         String newFileName;
         newFileName = f.getPath();
         newFileName = newFileName.replace(".crypt", "");
@@ -243,7 +248,7 @@ public class MergeTask extends Task {
         } catch (InvalidKeyException | IllegalBlockSizeException
                 | InvalidAlgorithmParameterException | NoSuchAlgorithmException | InvalidKeySpecException
                 | NoSuchPaddingException ex) {
-            ex.printStackTrace();
+            ErrorPopupMessage.show(ex.getMessage(), "");
         }
 
         File newFile = new File(newFileName);

@@ -33,6 +33,8 @@ public abstract class Task implements Runnable {
      * Costruisce un task
      *
      * @param tablePanel riferimento alla tabella che mostra i task in coda
+     * @param f Il file da dividere nel caso di un {@link DivideTask} oppure la prima parte dei file
+     *          da ricomporre nel caso di un {@link MergeTask}
      */
     public Task(QueueTablePanel tablePanel, File f) {
         this.file = f;

@@ -6,7 +6,9 @@ import gui.SplitFrame;
 public class Main {
 
     /**
-     * Crea un nuovo {@link SplitFrame} e lo rende visibile
+     * Crea un nuovo {@link SplitFrame} e lo rende visibile.
+     *
+     * @param args Gli argomenti del programma
      */
     public static void main(String args[]) {
         SplitFrame sf = new SplitFrame();

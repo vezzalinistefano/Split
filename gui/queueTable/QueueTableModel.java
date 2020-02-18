@@ -26,6 +26,7 @@ public class QueueTableModel extends AbstractTableModel {
 
     /**
      * Inizializza la tabella
+     *
      * @param tasks La coda dei {@link Task}
      */
     public QueueTableModel(ArrayList<Task> tasks) {
@@ -41,6 +42,7 @@ public class QueueTableModel extends AbstractTableModel {
 
     /**
      * Permette di ottenere il numero di righe presenti nella tabella
+     *
      * @return Il numero di righe nella tabella
      */
     @Override
@@ -50,6 +52,7 @@ public class QueueTableModel extends AbstractTableModel {
 
     /**
      * Permette di ottenere il numero di colonne presenti nella tabella
+     *
      * @return Il numero di colonne nella tabella
      */
     @Override
@@ -59,6 +62,7 @@ public class QueueTableModel extends AbstractTableModel {
 
     /**
      * Permette di ottenere il nome della colonna selezionata
+     *
      * @param col L'indice della colonna interessata
      * @return L'intestazione della colonna interessata
      */
@@ -69,9 +73,10 @@ public class QueueTableModel extends AbstractTableModel {
 
     /**
      * Definisce le informazioni da metterei in ogni casella della tabella
+     *
      * @param rowIndex Indice della riga della da riempire
      * @param colIndex Indice della colonna da riempire
-     * @return
+     * @return L'informazione da mettere nella specifica casella
      */
     @Override
     public Object getValueAt(int rowIndex, int colIndex) {
@@ -106,7 +111,7 @@ public class QueueTableModel extends AbstractTableModel {
                     case 1:
                         return ((MergeTask) t).getFileName();
                     case 2:
-                        return ((MergeTask)t).getFilesLength();
+                        return ((MergeTask) t).getFilesLength();
                     case 6:
                         return "" + t.getKeyword();
                     case 7:
