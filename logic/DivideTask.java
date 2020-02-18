@@ -1,5 +1,6 @@
 package logic;
 
+import gui.error.ErrorPopupMessage;
 import gui.panels.QueueTablePanel;
 
 import javax.crypto.*;
@@ -161,7 +162,8 @@ public class DivideTask extends Task {
             }
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            if (ex instanceof FileNotFoundException)
+                ErrorPopupMessage.show("Il file " + file.getName() + " non è stato trovato", "");
         }
     }
 
@@ -215,14 +217,9 @@ public class DivideTask extends Task {
                 | InvalidKeySpecException | NoSuchPaddingException ex) {
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
+            ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
+        } catch (InvalidKeyException | BadPaddingException | InvalidAlgorithmParameterException
+                | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
     }
@@ -253,10 +250,8 @@ public class DivideTask extends Task {
             zos.write(zBuffer, 0, zBuffer.length);
             zos.closeEntry();
             zos.close();
-        } catch (FileNotFoundException ex) {
-            //TODO future log
         } catch (IOException ex) {
-            //TODO future log
+            ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
         }
     }
 }

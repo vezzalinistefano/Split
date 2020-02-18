@@ -23,7 +23,7 @@ public class DefaultRow extends Row {
     }
 
     /**
-     * Compone la DefaultRow
+     * Costruisce la DefaultRow
      */
     public DefaultRow() {
         super();

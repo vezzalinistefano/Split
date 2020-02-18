@@ -91,8 +91,8 @@ public class SplitFrame extends JFrame {
         mergeSettingPanel = new MergeSettingPanel(mergeTaskListener, queueTablePanel);
 
 
-        mainPanel.addTab(DIVIDE_PANEL, divideSettingPanel);
-        mainPanel.addTab(MERGE_PANEL, mergeSettingPanel);
+        mainPanel.addTab("Dividi", divideSettingPanel);
+        mainPanel.addTab("Unisci", mergeSettingPanel);
 
 
         this.add(mainPanel, BorderLayout.NORTH);

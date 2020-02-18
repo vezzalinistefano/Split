@@ -2,7 +2,6 @@ package gui.rows;
 
 import gui.customComponents.CustomJSeparator;
 import gui.customComponents.CustomJTextField;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;

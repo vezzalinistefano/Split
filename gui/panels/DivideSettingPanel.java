@@ -1,6 +1,7 @@
 package gui.panels;
 
 import gui.SplitFrame;
+import gui.error.ErrorPopupMessage;
 import gui.rows.*;
 import logic.DivideTask;
 import logic.Task;
@@ -59,7 +60,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
      * @param tablePanel     Riferimento alla {@link JTable} che contiene la tabella dei {@link Task}
      */
     public DivideSettingPanel(ActionListener divideListener, QueueTablePanel tablePanel) {
-        super(SplitFrame.DIVIDE_PANEL);
+        super();
 
         this.chooseFileRow = new ChooseFileRow();
         this.cryptRow = new CryptRow();
@@ -105,19 +106,31 @@ public class DivideSettingPanel extends DivideAndMergePanel {
      * @param tasksQueue la coda dei task da eseguire
      */
     public void AddDivideTask(ArrayList<Task> tasksQueue) {
-        if (SplitFrame.performed) {
-            tasksQueue.clear();
-            SplitFrame.performed = false;
+        boolean allControl = true;
+        if (partsSettingsRow.getParts() * partsSettingsRow.getFileSize() > 0) {
+            ErrorPopupMessage.show("Inserire una dimensione valida", "Formato errato");
+            allControl = false;
         }
-        for (File f : chooseFileRow.getFilesSelected()) {
-            DivideTask divideTask = new DivideTask(f, partsSettingsRow.getParts(), partsSettingsRow.getFileSize(),
-                    cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword(),
-                    tablePanel);
+        if (cryptRow.getCryptSelection() && cryptRow.getKeyword().equals("")) {
+            ErrorPopupMessage.show("Inserire una password valida", "Password non inserita");
+            allControl = false;
+        }
+        if (allControl) {
+            if (SplitFrame.performed) {
+                tasksQueue.clear();
+                SplitFrame.performed = false;
+            }
+            for (File f : chooseFileRow.getFilesSelected()) {
+                DivideTask divideTask = new DivideTask(f, partsSettingsRow.getParts(), partsSettingsRow.getFileSize(),
+                        cryptRow.getCryptSelection(), compressRow.getCompressSelection(), cryptRow.getKeyword(),
+                        tablePanel);
 
-            tasksQueue.add(divideTask);
+                tasksQueue.add(divideTask);
+            }
+            tablePanel.updateTableModel();
+            chooseFileRow.cleanSelectedFiles();
         }
-        tablePanel.updateTableModel();
-        chooseFileRow.cleanSelectedFiles();
+
     }
 
     /**

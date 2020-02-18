@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * {@link Row} che mostra il bottone per aggiungere un {@link logic.DivideTask} in coda
+ * La {@link Row} che mostra il bottone per aggiungere un {@link logic.DivideTask} in coda
  */
 public class AddDivideTaskRow extends Row {
 

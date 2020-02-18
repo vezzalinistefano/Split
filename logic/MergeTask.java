@@ -1,5 +1,6 @@
 package logic;
 
+import gui.error.ErrorPopupMessage;
 import gui.panels.QueueTablePanel;
 
 import javax.crypto.*;
@@ -114,22 +115,30 @@ public class MergeTask extends Task {
         try {
             for (File f : this.files) {
                 if (isEncrypted(f)) {
-                    f = decryptFile(f);
+                    try {
+                        f = decryptFile(f);
+                    } catch (InvalidKeyException ex) {
+                        ErrorPopupMessage.show("La password non è valida", "Password errata");
+                    }
                 }
                 if (isZipped(f)) {
                     f = unzipFile(f);
                 }
 
-                FileInputStream fis = new FileInputStream(f);
+                try {
+                    FileInputStream fis = new FileInputStream(f);
 
-                buffer = new byte[(int) f.length()];
+                    buffer = new byte[(int) f.length()];
 
-                fis.read(buffer);
+                    fis.read(buffer);
 
-                baos.write(buffer);
-                fis.close();
+                    baos.write(buffer);
+                    fis.close();
 
-                f.delete();
+                    f.delete();
+                } catch (FileNotFoundException ex) {
+                    ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
+                }
 
                 super.setProgressValue(progress);
 
@@ -145,7 +154,7 @@ public class MergeTask extends Task {
             fos.write(totBuffer, 0, totBuffer.length);
             fos.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            ErrorPopupMessage.show("Il file " + file.getName() + " non è stato trovato", "");
         }
     }
 
@@ -180,7 +189,7 @@ public class MergeTask extends Task {
      * @param f Il file da decriptare
      * @return
      */
-    private File decryptFile(File f) {
+    private File decryptFile(File f) throws InvalidKeyException{
         String newFileName;
         newFileName = f.getPath();
         newFileName = newFileName.replace(".crypt", "");
@@ -214,11 +223,12 @@ public class MergeTask extends Task {
             fis.close();
             fos.flush();
             fos.close();
-        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException ex) {
-
-        } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException
-                | InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
+        } catch (BadPaddingException | IllegalBlockSizeException
+                | InvalidAlgorithmParameterException | NoSuchAlgorithmException | InvalidKeySpecException
+                | NoSuchPaddingException ex) {
+            ex.printStackTrace();
         }
 
         File newFile = new File(newFileName);
@@ -254,7 +264,7 @@ public class MergeTask extends Task {
             zis.close();
             fis.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");;
         }
 
         File newFile = new File(newFileName);
@@ -264,6 +274,7 @@ public class MergeTask extends Task {
 
     /**
      * Ritorna la lunghezza del file.
+     *
      * @return La lunghezza del file.
      */
     public int getFilesLength() {

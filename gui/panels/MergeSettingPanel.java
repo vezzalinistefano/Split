@@ -46,7 +46,7 @@ public class MergeSettingPanel extends DivideAndMergePanel {
      * @param tablePanel    Riferimento alla {@link JTable} che contiene la tabella dei {@link Task}
      */
     public MergeSettingPanel(ActionListener mergeListener, QueueTablePanel tablePanel) {
-        super(SplitFrame.MERGE_PANEL);
+        super();
 
         this.chooseFileRow = new ChooseFileRow();
         this.addMergeTaskRow = new AddMergeTaskRow(mergeListener);

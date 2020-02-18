@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * {@link Row} che permette all'utente di selezionare i file
+ * La {@link Row} che permette all'utente di selezionare i file
  * su cui operare.
  */
 public class ChooseFileRow extends Row {
