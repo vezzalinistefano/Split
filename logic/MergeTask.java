@@ -115,10 +115,19 @@ public class MergeTask extends Task {
         try {
             for (File f : this.files) {
                 if (isEncrypted(f)) {
-                    f = decryptFile(f);
+                    try {
+                        f = decryptFile(f);
+                    }catch (IOException ex) {
+                        ErrorPopupMessage.show("" + ex.getMessage(), "File non trovato");
+                        continue;
+                    }
+                    if (f == null)
+                        break;
                 }
                 if (isZipped(f)) {
                     f = unzipFile(f);
+                    if (f == null)
+                        continue;
                 }
 
                 try {
@@ -151,8 +160,6 @@ public class MergeTask extends Task {
             fos.close();
         } catch (IOException ex) {
             ErrorPopupMessage.show("Il file " + file.getName() + " non è stato trovato", "");
-        } catch (BadPaddingException ex) {
-            ErrorPopupMessage.show("La password non è valida", "Password errata");
         }
 
     }
@@ -188,10 +195,11 @@ public class MergeTask extends Task {
      * @param f Il file da decriptare
      * @return
      */
-    private File decryptFile(File f) throws BadPaddingException {
+    private File decryptFile(File f) throws IOException{
         String newFileName;
         newFileName = f.getPath();
         newFileName = newFileName.replace(".crypt", "");
+
         try {
             PBEKeySpec pbeKeySpec = new PBEKeySpec(this.keyword.toCharArray());
             SecretKeyFactory secretKeyFactory = SecretKeyFactory
@@ -215,15 +223,23 @@ public class MergeTask extends Task {
                     fos.write(output);
             }
 
-            byte[] output = cipher.doFinal();
+            byte[] output;
+            try {
+                output = cipher.doFinal();
+            } catch (BadPaddingException ex) {
+                fos.close();
+                File newFile = new File(newFileName);
+                newFile.delete();
+                ErrorPopupMessage.show("La password non è valida", "Password errata");
+                return null;
+            }
+
             if (output != null)
                 fos.write(output);
 
             fis.close();
             fos.flush();
             fos.close();
-        } catch (IOException ex) {
-            ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
         } catch (InvalidKeyException | IllegalBlockSizeException
                 | InvalidAlgorithmParameterException | NoSuchAlgorithmException | InvalidKeySpecException
                 | NoSuchPaddingException ex) {
@@ -264,7 +280,7 @@ public class MergeTask extends Task {
             fis.close();
         } catch (IOException ex) {
             ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
-            ;
+            return null;
         }
 
         File newFile = new File(newFileName);
