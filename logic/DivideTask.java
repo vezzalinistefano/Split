@@ -89,8 +89,13 @@ public class DivideTask extends Task {
         if (this.parts != -1) {
             this.sizeOfFiles = (int) Math.ceil((double) file.length() / parts);
         } else {
-            this.sizeOfFiles = sizeOfFiles * 1024 * 1024;
-            this.parts = Math.ceil(file.length() / (double) this.sizeOfFiles);
+            if (this.file.length() < 1024 * 1024) {
+                this.parts = 1;
+                this.sizeOfFiles = (int) this.file.length();
+            } else {
+                this.sizeOfFiles = sizeOfFiles * 1024 * 1024;
+                this.parts = Math.ceil(file.length() / (double) this.sizeOfFiles);
+            }
         }
     }
 
@@ -153,9 +158,14 @@ public class DivideTask extends Task {
                     newFile.delete();
                 }
 
+                out.close();
+                out.flush();
+
                 progress = 100 / ((float) file.length() / bytesAmount);
                 super.setProgressValue(progress);
             }
+
+            fis.close();
 
             if (super.getProgress() < 100) {
                 super.setProgressValue(100 - super.getProgress());
