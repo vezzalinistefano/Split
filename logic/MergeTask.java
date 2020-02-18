@@ -115,11 +115,7 @@ public class MergeTask extends Task {
         try {
             for (File f : this.files) {
                 if (isEncrypted(f)) {
-                    try {
-                        f = decryptFile(f);
-                    } catch (InvalidKeyException ex) {
-                        ErrorPopupMessage.show("La password non è valida", "Password errata");
-                    }
+                    f = decryptFile(f);
                 }
                 if (isZipped(f)) {
                     f = unzipFile(f);
@@ -155,7 +151,10 @@ public class MergeTask extends Task {
             fos.close();
         } catch (IOException ex) {
             ErrorPopupMessage.show("Il file " + file.getName() + " non è stato trovato", "");
+        } catch (BadPaddingException ex) {
+            ErrorPopupMessage.show("La password non è valida", "Password errata");
         }
+
     }
 
     /**
@@ -189,7 +188,7 @@ public class MergeTask extends Task {
      * @param f Il file da decriptare
      * @return
      */
-    private File decryptFile(File f) throws InvalidKeyException{
+    private File decryptFile(File f) throws BadPaddingException {
         String newFileName;
         newFileName = f.getPath();
         newFileName = newFileName.replace(".crypt", "");
@@ -225,7 +224,7 @@ public class MergeTask extends Task {
             fos.close();
         } catch (IOException ex) {
             ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
-        } catch (BadPaddingException | IllegalBlockSizeException
+        } catch (InvalidKeyException | IllegalBlockSizeException
                 | InvalidAlgorithmParameterException | NoSuchAlgorithmException | InvalidKeySpecException
                 | NoSuchPaddingException ex) {
             ex.printStackTrace();
@@ -264,7 +263,8 @@ public class MergeTask extends Task {
             zis.close();
             fis.close();
         } catch (IOException ex) {
-            ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");;
+            ErrorPopupMessage.show("Il file " + f.getName() + " non è stato trovato", "");
+            ;
         }
 
         File newFile = new File(newFileName);
