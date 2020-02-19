@@ -56,7 +56,7 @@ public class DivideSettingPanel extends DivideAndMergePanel {
     /**
      * Costruisce il DivideSettingPanel
      *
-     * @param divideListener L'{@link ActionListener} collegato a {@link AddDivideTaskRow}
+     * @param divideListener L'{@link ActionListener} collegato a {@link AddDivideTaskRow#addJobBtn}
      * @param tablePanel     Riferimento alla {@link JTable} che contiene la tabella dei {@link Task}
      */
     public DivideSettingPanel(ActionListener divideListener, QueueTablePanel tablePanel) {

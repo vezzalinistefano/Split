@@ -1,5 +1,6 @@
 package gui;
 
+import gui.error.ErrorPopupMessage;
 import gui.panels.*;
 import gui.panels.QueueTablePanel;
 import logic.Task;
@@ -20,7 +21,7 @@ public class SplitFrame extends JFrame {
     private ArrayList<Task> tasksQueue = new ArrayList<>();
 
     /**
-     * Contiene {@link DivideSettingPanel} e {@link MergeSettingPanel} dando la possibilitò
+     * Contiene {@link DivideSettingPanel} e {@link MergeSettingPanel} dando la possibilità
      * di switchare tra uno e l'altro
      */
     private JTabbedPane mainPanel;
@@ -45,9 +46,6 @@ public class SplitFrame extends JFrame {
      */
     private TasksManagementPanel tasksManagementPanel;
 
-    public static final String DIVIDE_PANEL = "Dividi";
-    public static final String MERGE_PANEL = "Unisci";
-
     /**
      * Permette al programma di capire se sono già stati eseguiti dei task o il programma
      * è appena stato aperto.
@@ -68,14 +66,16 @@ public class SplitFrame extends JFrame {
 
         ActionListener startTasksListener = actionEvent -> {
             String whichClicked = actionEvent.getActionCommand();
-            if(whichClicked.equals(tasksManagementPanel.getStartName()))
-                tasksManagementPanel.startTasks(tasksQueue);
-            else if(whichClicked.equals(tasksManagementPanel.getModifyName())) {
+            if (whichClicked.equals(tasksManagementPanel.getStartName())) {
+                if (!performed)
+                    tasksManagementPanel.startTasks(tasksQueue);
+                else
+                    ErrorPopupMessage.show("Nessun task da eseguire", "");
+            } else if (whichClicked.equals(tasksManagementPanel.getModifyName())) {
                 tasksManagementPanel.modifyElement(tasksQueue, queueTablePanel.getSelectedRow(),
                         divideSettingPanel);
                 queueTablePanel.updateTableModel();
-            }
-            else if(whichClicked.equals(tasksManagementPanel.getDeleteName())) {
+            } else if (whichClicked.equals(tasksManagementPanel.getDeleteName())) {
                 tasksManagementPanel.deleteElement(tasksQueue, queueTablePanel.getSelectedRow());
                 queueTablePanel.updateTableModel();
             }

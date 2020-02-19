@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Classe che implementa una versione personalizzata di JTextField che
+ * Classe che implementa una versione personalizzata di {@link JTextField} che
  * permetta di settare la dimensione direttamente da costruttore
  */
 public class CustomJTextField extends JTextField {

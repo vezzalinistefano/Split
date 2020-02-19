@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * {@link JPanel} per la gestione dei task presenti in coda
+ * Il {@link JPanel} per la gestione dei task presenti in coda
  */
 public class TasksManagementPanel extends JPanel {
 
@@ -70,15 +70,19 @@ public class TasksManagementPanel extends JPanel {
      * @param tasks La coda dei tasks da avviare
      */
     public void startTasks(ArrayList<Task> tasks) {
-        SplitFrame.performed = true;
-        ArrayList<Thread> thread = new ArrayList<>();
+        if(tasks.size() > 0) {
+            SplitFrame.performed = true;
+            ArrayList<Thread> thread = new ArrayList<>();
 
-        for (Task t : tasks) {
-            thread.add(new Thread(t));
-        }
+            for (Task t : tasks) {
+                thread.add(new Thread(t));
+            }
 
-        for (Thread t : thread) {
-            t.start();
+            for (Thread t : thread) {
+                t.start();
+            }
+        } else {
+            ErrorPopupMessage.show("Nessun task da eseguire", "");
         }
     }
 

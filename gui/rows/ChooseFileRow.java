@@ -80,6 +80,7 @@ public class ChooseFileRow extends Row {
 
     /**
      * Ritorna i file selezionati
+     *
      * @return Un array contenente i file selezionati
      */
     public File[] getFilesSelected() {
@@ -89,6 +90,7 @@ public class ChooseFileRow extends Row {
     /**
      * Aggiorna la {@link #txtFileSelected} e imposta {@link #fileChooser} su un file
      * a piacere
+     *
      * @param fileName Il nome del file da settare nel {@link #fileChooser}
      */
     public void updateFileSelected(String fileName) {

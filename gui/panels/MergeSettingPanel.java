@@ -66,8 +66,7 @@ public class MergeSettingPanel extends DivideAndMergePanel {
     }
 
     /**
-     * Crea un nuovo {@link MergeTask} per ogni file selezionato e lo aggiunge in coda, dopodichè
-     * aggiorna la tabella e pulisce la lista dei file selezionati in precedenza
+     * Crea un nuovo {@link MergeTask} per ogni file selezionato e lo aggiunge in coda.
      * <p>
      * Nel caso fosse già stato eseguita una serie di task pulisce la coda precedente
      *
